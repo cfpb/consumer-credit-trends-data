@@ -1,6 +1,6 @@
 # consumer-credit-trends-data
 
-![Screenshot of consumer-credit-trends](screenshot.png)
+![Screenshot of consumer-credit-trends](image.png)
 
 ## Explore recent developments in consumer credit markets
 This data appears on http://www.consumerfinance.gov/data-research/consumer-credit-trends/ powering graphs for each featured credit market.
