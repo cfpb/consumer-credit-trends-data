@@ -16,12 +16,10 @@ We want as much feedback as possible to help us make informed decisions so that 
 
 ## Data schema
 
-Markets:
-
 <table id="suffix">
   <tbody>
     <tr>
-      <th>Definition</th>
+      <th>Market</th>
       <th>Folder</th>
       <th>File Suffix</th>
     </tr>
