@@ -18,7 +18,7 @@ We want as much feedback as possible to help us make informed decisions so that 
 
 Markets:
 
-auto-loans (AUT)
-credit-cards (CRC)
-mortgages (MTG)
-student-loans (STU)
+- auto-loans (AUT)
+- credit-cards (CRC)
+- mortgages (MTG)
+- student-loans (STU)
