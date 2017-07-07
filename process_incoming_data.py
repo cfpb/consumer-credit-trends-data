@@ -337,6 +337,10 @@ def process_data_files(inputpath,
                        data_snapshot_path=''):
     """Processes raw csv data from the Office of Research"""
     inputfiles = get_csv_list(inputpath)
+    if len(inputfiles) == 0:
+        logger.warn("No csv data files found in {}".format(inputpath))
+        return []
+
     successes = []
     failures = []
     snapshot_updates = []
