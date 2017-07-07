@@ -7,7 +7,7 @@ Output formats are documented at
 www.github.com/cfpb/consumer-credit-trends
 """
 
-## Python library imports
+# Python library imports
 import os
 import csv
 import datetime
@@ -24,24 +24,25 @@ __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
 
-## Global variables
+# Global variables
 # Default save folder if another folder is not specified
 DEFAULT_INPUT_FOLDER = "~/Github/consumer-credit-trends-data/data"
 DEFAULT_OUTPUT_FOLDER = "~/Github/consumer-credit-trends-data/processed_data/"
 
-## Data snapshot variables
+# Data snapshot variables
 # Data snapshot default file name
 SNAPSHOT_FNAME_KEY = "data_snapshot"
 # Text filler for data snapshot descriptors
-MKT_DESCRIPTORS = {"AUT": ["Auto loans", "Dollar volume of new loans"],     # Auto loans
-                   "CRC": ["Credit cards", "Aggregate credit limits of new cards"],   # Credit cards
-                   "HCE": ["HECE loans", "Dollar volume of new loans"],     # Home Equity, Closed-End
-                   "HLC": ["HELOCs", "Dollar volume of new HELOCs"],        # Home Equity Line of Credit (HELOC)
-                   "MTG": ["Mortgages", "Dollar volume of new mortgages"],  # Mortgages
-                   "PER": ["Personal loans", "Dollar volume of new loans"], # Personal loans
-                   "RET": ["Retail loans", "Dollar volume of new loans"],   # Retail loans
-                   "STU": ["Student loans", "Dollar volume of new loans"],  # Student loans
-                   }
+MKT_DESCRIPTORS = {
+    "AUT": ["Auto loans", "Dollar volume of new loans"],
+    "CRC": ["Credit cards", "Aggregate credit limits of new cards"],
+    "HCE": ["HECE loans", "Dollar volume of new loans"],
+    "HLC": ["HELOCs", "Dollar volume of new HELOCs"],
+    "MTG": ["Mortgages", "Dollar volume of new mortgages"],
+    "PER": ["Personal loans", "Dollar volume of new loans"],
+    "RET": ["Retail loans", "Dollar volume of new loans"],
+    "STU": ["Student loans", "Dollar volume of new loans"],
+}
 
 PERCENT_CHANGE_DESCRIPTORS = ["decrease", "increase"]
 
@@ -55,29 +56,47 @@ DATE_SCHEMA = "%Y-%m"
 
 # Input/output schemas
 MAP_OUTPUT_SCHEMA = ["fips_code", "state_abbr", "value"]
-SUMMARY_NUM_OUTPUT_SCHEMA = ["month","date","num","num_unadj"]
-SUMMARY_VOL_OUTPUT_SCHEMA = ["month","date","vol","vol_unadj"]
-YOY_SUMMARY_OUTPUT_SCHEMA = ["month","date","yoy_num","yoy_vol"]
+SUMMARY_NUM_OUTPUT_SCHEMA = ["month", "date", "num", "num_unadj"]
+SUMMARY_VOL_OUTPUT_SCHEMA = ["month", "date", "vol", "vol_unadj"]
+YOY_SUMMARY_OUTPUT_SCHEMA = ["month", "date", "yoy_num", "yoy_vol"]
 
 # Groups - become column name prefixes
 AGE = "age"
 INCOME = "income_level"
 SCORE = "credit_score"
 
-# Output: "month","date","yoy_<type>","yoy_<type>",...,"yoy_<type>"
+# Output: "month", "date", "yoy_<type>", "yoy_<type>",..., "yoy_<type>"
 # All the "yoy_<type>" inputs get added in processing
-GROUP_YOY_OUTPUT_SCHEMA = ["month","date"]
+GROUP_YOY_OUTPUT_SCHEMA = ["month", "date"]
 # YOY groups
 # CFPB design standards: sentence case and no spaces around dashes
-AGE_YOY_IN = ["Younger than 30","30 - 44","45 - 64","65 and older"]
-AGE_YOY_COLS = ["younger-than-30","30-44","45-64","65-and-older"]
-AGE_YOY_JSON = ["Younger than 30","30-44","45-64","65 and older"]
-INCOME_YOY_IN = ["Low","Moderate","Middle","High"]
-INCOME_YOY_COLS = ["low","moderate","middle","high"]
-INCOME_YOY_JSON = INCOME_YOY_IN # No changes for dashes or caps
-SCORE_YOY_IN = ["Deep Subprime","Subprime","Near Prime","Prime","Superprime"]
-SCORE_YOY_COLS = ["deep-subprime","subprime","near-prime","prime","super-prime"]
-SCORE_YOY_JSON = ["Deep subprime","Subprime","Near-prime","Prime","Super-prime"]
+AGE_YOY_IN = ["Younger than 30", "30 - 44", "45 - 64", "65 and older"]
+AGE_YOY_COLS = ["younger-than-30", "30-44", "45-64", "65-and-older"]
+AGE_YOY_JSON = ["Younger than 30", "30-44", "45-64", "65 and older"]
+INCOME_YOY_IN = ["Low", "Moderate", "Middle", "High"]
+INCOME_YOY_COLS = ["low", "moderate", "middle", "high"]
+INCOME_YOY_JSON = INCOME_YOY_IN  # No changes for dashes or caps
+SCORE_YOY_IN = [
+    "Deep Subprime",
+    "Subprime",
+    "Near Prime",
+    "Prime",
+    "Superprime"
+]
+SCORE_YOY_COLS = [
+    "deep-subprime",
+    "subprime",
+    "near-prime",
+    "prime",
+    "super-prime"
+]
+SCORE_YOY_JSON = [
+    "Deep subprime",
+    "Subprime",
+    "Near-prime",
+    "Prime",
+    "Super-prime"
+]
 
 # Fixes input text to follow agency guidelines and design manual
 TEXT_FIXES = {"30 - 44": "Age 30-44",
@@ -85,21 +104,21 @@ TEXT_FIXES = {"30 - 44": "Age 30-44",
               "65 and older": "Age 65 and older",
               "Deep Subprime": "Deep subprime",
               "Near Prime": "Near-prime",
-              "Superprime":"Super-prime",
+              "Superprime": "Super-prime",
               }
 
-# Output: "month","date","vol","vol_unadj","<grouptype>_group"
-GROUP_VOL_OUTPUT_SCHEMA = ["month","date","vol","vol_unadj","{}_group"]
+# Output: "month", "date", "vol", "vol_unadj", "<grouptype>_group"
+GROUP_VOL_OUTPUT_SCHEMA = ["month", "date", "vol", "vol_unadj", "{}_group"]
 
 # Market names - these become directory names
-MARKET_NAMES = {"AUT": "auto-loans",     # Auto loans
-                "CRC": "credit-cards",   # Credit cards
-                "HCE": "heces",          # Home Equity, Closed-End
-                "HLC": "helocs",         # Home Equity Line of Credit (HELOC)
-                "MTG": "mortgages",      # Mortgages
-                "PER": "personal-loans", # Personal loans
-                "RET": "retail-loans",   # Retail loans
-                "STU": "student-loans",  # Student loans
+MARKET_NAMES = {"AUT": "auto-loans",
+                "CRC": "credit-cards",
+                "HCE": "heces",
+                "HLC": "helocs",
+                "MTG": "mortgages",
+                "PER": "personal-loans",
+                "RET": "retail-loans",
+                "STU": "student-loans",
                 }
 
 # State FIPS codes - used to translate state codes into abbr
@@ -157,18 +176,20 @@ FIPS_CODES = {1:  "AL",
               }
 
 
-## Set up logging
+# Set up logging
 logging.basicConfig(level="WARNING")
 logger = logging.getLogger(__name__)
 
 
-## Methods
+# Methods
 
 def save_csv(filename, content, writemode='wb'):
     """Saves the specified content object into a csv file."""
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
-        logger.info("Created directories for {}".format(os.path.dirname(filename)))
+        logger.info(
+            "Created directories for {}".format(os.path.dirname(filename))
+        )
 
     # Write output as a csv file
     with open(filename, writemode) as csvfile:
@@ -182,7 +203,9 @@ def save_json(filename, json_content, writemode='wb'):
     """Dumps the specified JSON content into a .json file"""
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
-        logger.info("Created directories for {}".format(os.path.dirname(filename)))
+        logger.info(
+            "Created directories for {}".format(os.path.dirname(filename))
+        )
 
     # Write output as a json file
     with open(filename, writemode) as fp:
@@ -206,10 +229,10 @@ def load_csv(filename, skipheaderrow=True):
         return data
 
 
-def load_paths(inputpath=DEFAULT_INPUT_FOLDER, outputpath=DEFAULT_OUTPUT_FOLDER):
+def load_paths(inpath=DEFAULT_INPUT_FOLDER, outpath=DEFAULT_OUTPUT_FOLDER):
     """Loads the root path and destination paths and performs path checking"""
-    inpath = expand_path(inputpath)
-    outpath = expand_path(outputpath)
+    inpath = expand_path(inpath)
+    outpath = expand_path(outpath)
 
     return inpath, outpath
 
@@ -246,44 +269,54 @@ def actual_date(month, schema=DATE_SCHEMA):
     January 2000 = month zero
     """
     addl_years = int(month/12)
-    addl_months = (month % 12) + 1  # offset for January, as month input is 1-12
+    addl_months = (month % 12) + 1  # offset for January: month input is 1-12
 
     date = datetime.date(BASE_YEAR + addl_years, addl_months, 1)
 
     return date.strftime(schema)
 
 
-# Unix Epoch conversion from
-# http://stackoverflow.com/questions/11743019/convert-python-datetime-to-epoch-with-strftime
+# Unix Epoch conversion from http://stackoverflow.com/questions/11743019/
 def epochtime(datestring, schema=DATE_SCHEMA):
-    """Converts a date string from specified schema to seconds since J70/Unix epoch"""
-
+    """Converts a date string from specified schema to seconds since
+    J70/Unix epoch"""
     date = datetime.datetime.strptime(datestring, schema)
 
     return int(round((date - datetime.datetime(1970, 1, 1)).total_seconds()))
 
 
 # Modified from an answer at:
-# http://stackoverflow.com/questions/3154460/python-human-readable-large-numbers
+# http://stackoverflow.com/questions/3154460/
 def human_numbers(num, decimal_places=1, whole_units_only=1):
     """Given a number, returns a human-modifier (million/billion) number
-    Number returned will be to the specified number of decimal places with modifier
-    (default: 1) - e.g. 1100000 returns '1.1 million'.
+    Number returned will be to the specified number of decimal places with
+    modifier (default: 1) - e.g. 1100000 returns '1.1 million'.
     If whole_units_only is specified, no parts less than one unit will
-    be displayed, i.e. 67.012 becomes 67. This has no effect on numbers with modifiers."""
-    numnames = ['', '', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion']
-    # TODO: Insert commas every 3 if not over millions
+    be displayed, i.e. 67.012 becomes 67.
+    whole_units_only has no effect on numbers with modifiers (>1 million)."""
+    numnames = [
+        '',
+        '',
+        'million',
+        'billion',
+        'trillion',
+        'quadrillion',
+        'quintillion'
+    ]
 
     n = float(num)
-    idx = max(0,min(len(numnames) - 1,
-                    int(math.floor(0 if n == 0 else math.log10(abs(n))/3))))
+    idx = max(0,
+              min(len(numnames) - 1,
+                  int(math.floor(0 if n == 0 else math.log10(abs(n))/3))
+                  )
+              )
 
     # Create the output string with the requested number of decimal places
     # This has to be a separate step from the format() call because otherwise
     # format() gets called on the final fragment only
     outstr = '{:,.' + str(decimal_places) + 'f} {}'
 
-    # Insert commas every 3 numbers if not over millions and only whole units chosen
+    # Insert commas every 3 numbers
     if idx < 2:
         if whole_units_only:
             return '{:,}'.format(int(round(n)))
@@ -296,17 +329,16 @@ def human_numbers(num, decimal_places=1, whole_units_only=1):
     return outstr.format(outnum, numnames[idx])
 
 
-## Main program functionality
+# Main program functionality
 
 def process_data_files(inputpath,
                        outputpath,
                        data_snapshot_fname=SNAPSHOT_FNAME_KEY,
                        data_snapshot_path=''):
     """Processes raw csv data from the Office of Research"""
-    # Get a list of files in the raw data directory
     inputfiles = get_csv_list(inputpath)
     successes = []
-    failures  = []
+    failures = []
     snapshot_updates = []
 
     # For each file, open and munge data
@@ -317,7 +349,9 @@ def process_data_files(inputpath,
 
         if market is None:
             if data_snapshot_fname not in filename:
-                logger.warn("Found file '{}' does not specify market".format(filename))
+                logger.warn(
+                    "Found file '{}' does not specify market".format(filename)
+                )
                 failures.append(filename)
                 continue
 
@@ -338,7 +372,8 @@ def process_data_files(inputpath,
         else:
             # Run file per market-type
             try:
-                cond, data, json = FILE_PREFIXES[filename[:MKT_SFX_LEN].lower()](filepath)
+                current_prefix = filename[:MKT_SFX_LEN].lower()
+                cond, data, json = FILE_PREFIXES[current_prefix](filepath)
             except ValueError, e:
                 logger.error("Error occurred during {}".format(filename))
                 raise e
@@ -358,17 +393,22 @@ def process_data_files(inputpath,
             else:
                 failures.append(filename)
 
-    logger.info("** Processed {} of {} input data files successfully".format(len(successes), len(inputfiles)))
+    logger.info(
+        "** Processed {} of {} input data files successfully".format(
+            len(successes),
+            len(inputfiles)
+        )
+    )
 
     return snapshot_updates
 
 
-## Process state-by-state map files
+# Process state-by-state map files
 
 def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
     """Processes specified map file and outputs data per the schema"""
-    # Input  columns: "state","value"
-    # Output columns: "fips_code","state_abbr","value"
+    # Input  columns: "state", "value"
+    # Output columns: "fips_code", "state_abbr", "value"
 
     # Load specified file as input data
     inputdata = load_csv(filename)
@@ -390,17 +430,17 @@ def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
     return True, [], []
 
 
-## Process summary files with loan numbers or volumes
+# Process summary files with loan numbers or volumes
 
 def process_num_summary(filename):
-    """Helper function that calls process_file_summary with correct output schema"""
-    # Output columns: "month","date","num","num_unadj"
+    """Calls process_file_summary with correct output schema"""
+    # Output columns: "month", "date", "num", "num_unadj"
     return process_file_summary(filename, SUMMARY_NUM_OUTPUT_SCHEMA)
 
 
 def process_vol_summary(filename):
-    """Helper function that calls process_file_summary with correct output schema"""
-    # Output columns: "month","date","vol","vol_unadj"
+    """Calls process_file_summary with correct output schema"""
+    # Output columns: "month", "date", "vol", "vol_unadj"
     return process_file_summary(filename, SUMMARY_VOL_OUTPUT_SCHEMA)
 
 
@@ -418,7 +458,7 @@ def process_file_summary(filename, output_schema):
     for row in inputdata:
         monthstr, value, is_adj_str = row
         monthnum = int(monthstr)
-        if not proc.has_key(monthnum):
+        if monthnum not in proc:
             proc[monthnum] = {"adj": None, "unadj": None}
 
         if "unadjust" in is_adj_str.lower():
@@ -426,9 +466,12 @@ def process_file_summary(filename, output_schema):
         elif "seasonal" in is_adj_str.lower():
             proc[monthnum]["adj"] = value
         else:
-            raise TypeError("Data row (below) does not specify seasonal " +
-                            "adjustment in {}\n{}".format(
-                            filename, ",".join(row)))
+            raise TypeError(
+                "Data row (below) does not specify seasonal adjustment " +
+                "in {}\n{}".format(
+                    filename, ",".join(row)
+                )
+            )
 
     # Turn dictionaries into a data list for output
     # This order MUST match the provided schema order
@@ -450,11 +493,11 @@ def process_file_summary(filename, output_schema):
     return True, [], []
 
 
-## Process volume files with groups (borrower age, income level, credit score)
-# Output columns: "month","date","volume","volume_unadj","<type>_group"
+# Process volume files with groups (borrower age, income level, credit score)
+# Output columns: "month", "date", "volume", "volume_unadj", "<type>_group"
 
 def process_group_age_vol(filename):
-    """Helper function that calls process_group_file with correct
+    """Calls process_group_file with correct
     group and output schema"""
 
     schema = list(GROUP_VOL_OUTPUT_SCHEMA)
@@ -464,8 +507,7 @@ def process_group_age_vol(filename):
 
 
 def process_group_income_vol(filename):
-    """Helper function that calls process_group_file with correct
-    group and output schema"""
+    """Calls process_group_file with correct group and output schema"""
 
     schema = list(GROUP_VOL_OUTPUT_SCHEMA)
     schema[-1] = schema[-1].format(INCOME)
@@ -474,7 +516,7 @@ def process_group_income_vol(filename):
 
 
 def process_group_score_vol(filename):
-    """Helper function that calls process_group_file with correct
+    """Calls process_group_file with correct
     group and output schema"""
 
     schema = list(GROUP_VOL_OUTPUT_SCHEMA)
@@ -497,10 +539,10 @@ def process_group_file(filename, output_schema):
     for row in inputdata:
         monthstr, value, group, is_adj_str = row
         monthnum = int(monthstr)
-        if not proc.has_key(monthnum):
+        if monthnum not in proc:
             proc[monthnum] = {}
 
-        if not proc[monthnum].has_key(group):
+        if group not in proc[monthnum]:
             proc[monthnum][group] = {"adj": None, "unadj": None}
 
         if "unadjust" in is_adj_str.lower():
@@ -508,9 +550,13 @@ def process_group_file(filename, output_schema):
         elif "seasonal" in is_adj_str.lower():
             proc[monthnum][group]["adj"] = value
         else:
-            raise TypeError("Data row (below) does not specify seasonal " +
-                            "adjustment in {}\n{}".format(
-                            filename, ",".join(row)))
+            raise TypeError(
+                "Data row (below) does not specify seasonal adjustment " +
+                "in {}\n{}".format(
+                    filename,
+                    ",".join(row)
+                )
+            )
 
     # Turn dictionaries into a data list for output
     # This order MUST match the provided schema order
@@ -542,12 +588,12 @@ def process_group_file(filename, output_schema):
     return True, [], []
 
 
-## Process year-over-year files with groups (borrower age, income level, credit score)
-# Output columns: "month","date","yoy_<type>","yoy_<type>",...,"yoy_<type>"
+# Process year-over-year files with groups
+# (i.e. borrower age, income level, credit score)
+# Output columns: "month", "date", "yoy_<type>", "yoy_<type>",..., "yoy_<type>"
 
 def process_group_age_yoy(filename):
-    """Helper function that calls process_group_yoy_groups with correct
-    group and output schema"""
+    """alls process_group_yoy_groups with correct group and output schema"""
     postfix = "{}_yoy"
     output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
     output_schema += [postfix.format(gname) for gname in AGE_YOY_COLS]
@@ -559,48 +605,62 @@ def process_group_age_yoy(filename):
     if len(data) > 1:
         json = json_for_group_bar_chart(data[1:], AGE_YOY_COLS, AGE_YOY_JSON)
 
-
     return cond, data, json
 
 
 def process_group_income_yoy(filename):
-    """Helper function that calls process_group_yoy_groups with correct
-    group and output schema"""
+    """Calls process_group_yoy_groups with correct group and output schema"""
     # Generate output schema from group YOY column names
     postfix = "{}_yoy"
     output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
     output_schema += [postfix.format(gname) for gname in INCOME_YOY_COLS]
 
-    cond, data = process_group_yoy_groups(filename, INCOME_YOY_IN, output_schema)
+    cond, data = process_group_yoy_groups(
+        filename,
+        INCOME_YOY_IN,
+        output_schema
+    )
 
     # Format for JSON
     json = []
     if len(data) > 1:
-        json = json_for_group_bar_chart(data[1:], INCOME_YOY_COLS, INCOME_YOY_JSON)
+        json = json_for_group_bar_chart(
+            data[1:],
+            INCOME_YOY_COLS,
+            INCOME_YOY_JSON
+        )
 
     return cond, data, json
 
 
 def process_group_score_yoy(filename):
-    """Helper function that calls process_group_yoy_groups with correct
-    group and output schema"""
+    """Calls process_group_yoy_groups with correct group and output schema"""
     # Generate output schema from group YOY column names
     postfix = "{}_yoy"
     output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
     output_schema += [postfix.format(gname) for gname in SCORE_YOY_COLS]
 
-    cond, data = process_group_yoy_groups(filename, SCORE_YOY_IN, output_schema)
+    cond, data = process_group_yoy_groups(
+        filename,
+        SCORE_YOY_IN,
+        output_schema
+    )
 
     # Format for JSON
     json = []
     if len(data) > 1:
-        json = json_for_group_bar_chart(data[1:], SCORE_YOY_COLS, SCORE_YOY_JSON)
+        json = json_for_group_bar_chart(
+            data[1:],
+            SCORE_YOY_COLS,
+            SCORE_YOY_JSON
+        )
 
     return cond, data, json
 
 
 def process_group_yoy_groups(filename, group_names, output_schema):
-    """Processes specified group year-over-year file and outputs data per the schema"""
+    """Processes specified group year-over-year file and outputs data
+    per the provided output schema"""
 
     # Load specified file as input data
     inputdata = load_csv(filename)
@@ -614,8 +674,8 @@ def process_group_yoy_groups(filename, group_names, output_schema):
         monthstr, value, group = row
         monthnum = int(monthstr)
 
-        if not proc.has_key(monthnum):
-            proc[monthnum] = {gname: None for gname in group_names}
+        if monthnum not in proc:
+            proc[monthnum] = {name: None for name in group_names}
 
         if group in group_names:
             proc[monthnum][group] = value
@@ -641,8 +701,9 @@ def process_group_yoy_groups(filename, group_names, output_schema):
 
 
 def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
-    """Processes specified year-over-year summary file and outputs data per the schema"""
-    # Output columns: "month","date","yoy_num","yoy_vol"
+    """Processes specified year-over-year summary file and outputs data
+    per the provided output schema"""
+    # Output columns: "month", "date", "yoy_num", "yoy_vol"
 
     # Load specified file as input data
     inputdata = load_csv(filename)
@@ -655,7 +716,7 @@ def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
     for row in inputdata:
         monthstr, value, type_str = row
         monthnum = int(monthstr)
-        if not proc.has_key(monthnum):
+        if monthnum not in proc:
             proc[monthnum] = {"num": None, "vol": None}
 
         # Input column "group" is "Dollar Volume" or "Number of Loans"
@@ -687,10 +748,10 @@ def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
     return True, [], []
 
 
-## JSON Output calls
+# JSON Output calls
 
 def json_for_bar_chart(data):
-    """Takes input data and returns formatted values for dumping to a JSON file """
+    """Takes input data and returns formatted values for a JSON file"""
 
     outnum = []
     outvol = []
@@ -707,18 +768,19 @@ def json_for_bar_chart(data):
 
 
 def json_for_group_bar_chart(data, val_cols, out_names):
-    """Takes input data and returns formatted values for dumping to a JSON file """
+    """Takes input data and returns formatted values for a JSON file """
 
     tmp = {}
     for col in val_cols:
         tmp[col] = []
 
-    # Group bar charts (yoy) have variable numbers of columns depending on the groups
+    # Group bar charts (yoy) have a variable numbers of columns by groups
     for row in data:
         sec = epochtime(row[1])
         for colnum in range(len(val_cols)):
             try:
-                tmp[val_cols[colnum]].append([sec * SEC_TO_MS, float(row[2+colnum])])
+                tmp_col = val_cols[colnum]
+                tmp[tmp_col].append([sec * SEC_TO_MS, float(row[2+colnum])])
             except ValueError:
                 continue
 
@@ -728,14 +790,17 @@ def json_for_group_bar_chart(data, val_cols, out_names):
     for col_key in tmp.keys():
         idx = val_cols.index(col_key)
         if idx < 0:
-            raise IndexError("Key '{}' does not exist in {}".format(col_key, val_cols))
+            raise IndexError("Key '{}' does not exist in {}".format(
+                col_key,
+                val_cols)
+            )
         out[out_names[idx]] = tmp[col_key][:]
 
     return out
 
 
 def json_for_line_chart(data):
-    """Takes input data and returns formatted values for dumping to a JSON file """
+    """Takes input data and returns formatted values for a JSON file """
 
     out = {"adjusted": [], "unadjusted": []}
 
@@ -751,7 +816,7 @@ def json_for_line_chart(data):
 
 
 def json_for_group_line_chart(data):
-    """Takes input data and returns formatted values for dumping to a JSON file"""
+    """Takes input data and returns formatted values for to a JSON file"""
     # TODO: Maybe use the known global key groups to init groupname dicts once
     out = {}
 
@@ -768,8 +833,9 @@ def json_for_group_line_chart(data):
             out[groupname] = {"adjusted": [], "unadjusted": []}
 
         try:
-            out[groupname]["adjusted"].append([sec * SEC_TO_MS, float(val)])
-            out[groupname]["unadjusted"].append([sec * SEC_TO_MS, float(val_unadj)])
+            millisec = sec * SEC_TO_MS
+            out[groupname]["adjusted"].append([millisec, float(val)])
+            out[groupname]["unadjusted"].append([millisec, float(val_unadj)])
         except ValueError:
             # Discard "NA" values and other non-float-able values
             continue
@@ -778,8 +844,8 @@ def json_for_group_line_chart(data):
 
 
 def json_for_tile_map(data):
-    """Takes input data and returns a list of dicts of state names and percentages
-    for dumping to a JSON file:
+    """Takes input data and returns a list of dicts of state names and
+    percentages for dumping to a JSON file:
     Input is a list of lists: [[FIPS code, state abbr, percentages],...]
     Output is list of dicts: [{"name": abbr, "value": percentage},...]
     """
@@ -814,7 +880,6 @@ def process_data_snapshot(filepath):
         monthnum = int(monthnum)
 
         # Determine market and month
-        output_mkt = find_market(market)
         month = actual_date(monthnum, schema="%B %Y")
 
         # Retrieve snapshot descriptors
@@ -823,14 +888,15 @@ def process_data_snapshot(filepath):
         # Parse numbers
         orig_fmt = human_numbers(float(orig), whole_units_only=1)
         vol_fmt = human_numbers(float(vol))
-        yoy_fmt = "{:.1f}".format(abs(float(yoy)))
+        yoy_num = "{:.1f}".format(abs(float(yoy)))
         yoy_desc = PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
+        yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
         out_dict = {'market_key': market,
                     'data_month': month,
                     'num_originations': orig_fmt,
                     'value_originations': "${}".format(vol_fmt),
-                    'year_over_year_change': "{}% {}".format(yoy_fmt, yoy_desc)}
+                    'year_over_year_change': yoy_fmt}
 
         data.append(out_dict)
 
@@ -840,37 +906,53 @@ def process_data_snapshot(filepath):
 # Filenames are formatted as:
 # "<prefix>_<market>.csv"
 # NOTE: This global set must come after the methods are defined
-FILE_PREFIXES = {"map_data":                process_map,
-                 "num_data":                process_num_summary,
-                 "vol_data":                process_vol_summary,
-                 "volume_data_age_group":   process_group_age_vol,
-                 "volume_data_income_level":process_group_income_vol,
-                 "volume_data_score_level": process_group_score_vol,
-                 "yoy_data_all":            process_yoy_summary,
-                 "yoy_data_age_group":      process_group_age_yoy,
-                 "yoy_data_income_level":   process_group_income_yoy,
-                 "yoy_data_score_level":    process_group_score_yoy,
+FILE_PREFIXES = {"map_data":                 process_map,
+                 "num_data":                 process_num_summary,
+                 "vol_data":                 process_vol_summary,
+                 "volume_data_age_group":    process_group_age_vol,
+                 "volume_data_income_level": process_group_income_vol,
+                 "volume_data_score_level":  process_group_score_vol,
+                 "yoy_data_all":             process_yoy_summary,
+                 "yoy_data_age_group":       process_group_age_yoy,
+                 "yoy_data_income_level":    process_group_income_yoy,
+                 "yoy_data_score_level":     process_group_score_yoy,
                  }
 
 
 if __name__ == '__main__':
     import argparse
-    parser = argparse.ArgumentParser(description='Processes data files from ' +
-                                                 'the CFPB Office of Research.')
-    parser.add_argument('-i', '--input-path', metavar="INPUTDIR", type=str,
-                        dest='inputdir', default=DEFAULT_INPUT_FOLDER,
-                        help='Specifies directory path for folder containing input data files ' +
-                             '(default: "~/Github/consumer-credit-trends-data/data)')
-    parser.add_argument('-o', '--output-path', metavar="OUTPUTDIR", type=str,
-                        dest='outputdir', default=DEFAULT_OUTPUT_FOLDER,
-                        help='Specifies directory path for root folder to put processed data ' +
-                             '(default: "~/Github/consumer-credit-trends-data/processed_data/")')
-    parser.add_argument('-d', '--data-snapshot-path', type=str, default='',
-                        dest='output_data_snapshot_file',
-                        help='Specifies path and filename for where to save ' +
-                             'data snapshot updates as json; if blank, no file ' +
-                             'will be saved (default: <blank>)')
-
+    parser = argparse.ArgumentParser(
+        description='Processes data files from the CFPB Office of Research.'
+    )
+    parser.add_argument(
+        '-i',
+        '--input-path',
+        metavar="INPUTDIR",
+        type=str,
+        dest='inputdir',
+        default=DEFAULT_INPUT_FOLDER,
+        help='Specifies directory path for folder containing input data ' +
+             'files (default: "~/Github/consumer-credit-trends-data/data)'
+    )
+    parser.add_argument(
+        '-o',
+        '--output-path',
+        metavar="OUTPUTDIR",
+        type=str,
+        dest='outputdir',
+        default=DEFAULT_OUTPUT_FOLDER,
+        help='Specifies directory path for root folder to put processed ' +
+             'data (default: "{}")'.format(DEFAULT_OUTPUT_FOLDER)
+    )
+    parser.add_argument(
+        '-d',
+        '--data-snapshot-path',
+        type=str,
+        default='',
+        dest='output_data_snapshot_file',
+        help='Specifies path and filename for where to save data snapshot ' +
+             'updates as json; if blank (default), no file will be saved'
+    )
 
     args = parser.parse_args()
 
@@ -878,6 +960,8 @@ if __name__ == '__main__':
     inputdir, outputdir = load_paths(args.inputdir, args.outputdir)
 
     # Process the data
-    snapshot_updates = process_data_files(inputdir,
-                                          outputdir,
-                                          data_snapshot_path=args.output_data_snapshot_file)
+    snapshot_updates = process_data_files(
+        inputdir,
+        outputdir,
+        data_snapshot_path=args.output_data_snapshot_file
+    )
