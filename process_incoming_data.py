@@ -19,7 +19,7 @@ import json
 __author__ = "Consumer Financial Protection Bureau"
 __credits__ = ["Hillary Jeffrey"]
 __license__ = "CC0-1.0"
-__version__ = "0.2"
+__version__ = "0.3"
 __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
@@ -52,7 +52,8 @@ MKT_SFX_LEN = -8
 # Data base year
 BASE_YEAR = 2000
 SEC_TO_MS = 1000
-DATE_SCHEMA = "%Y-%m"
+DATA_FILE_DATE_SCHEMA = "%Y-%m"
+SNAPSHOT_DATE_SCHEMA = "%Y-%m-%d"
 
 # Input/output schemas
 MAP_OUTPUT_SCHEMA = ["fips_code", "state_abbr", "value"]
@@ -263,7 +264,7 @@ def find_market(input, possible_names=MARKET_NAMES):
     return None
 
 
-def actual_date(month, schema=DATE_SCHEMA):
+def actual_date(month, schema=DATA_FILE_DATE_SCHEMA):
     """
     Takes a month number and computes a date from it.
     January 2000 = month zero
@@ -277,7 +278,7 @@ def actual_date(month, schema=DATE_SCHEMA):
 
 
 # Unix Epoch conversion from http://stackoverflow.com/questions/11743019/
-def epochtime(datestring, schema=DATE_SCHEMA):
+def epochtime(datestring, schema=DATA_FILE_DATE_SCHEMA):
     """Converts a date string from specified schema to seconds since
     J70/Unix epoch"""
     date = datetime.datetime.strptime(datestring, schema)
@@ -868,7 +869,7 @@ def json_for_tile_map(data):
     return out
 
 
-def process_data_snapshot(filepath):
+def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
     """Process a file at filepath that contains data snapshot information
     for all markets and prepare human-readable text for output.
     Returns a list of market-data dictionaries."""
@@ -884,7 +885,7 @@ def process_data_snapshot(filepath):
         monthnum = int(monthnum)
 
         # Determine market and month
-        month = actual_date(monthnum, schema="%B %Y")
+        month = actual_date(monthnum, schema=date_schema)
 
         # Retrieve snapshot descriptors
         orig_desc, vol_desc = MKT_DESCRIPTORS[market]
