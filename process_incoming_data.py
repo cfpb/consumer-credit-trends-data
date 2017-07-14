@@ -364,13 +364,25 @@ def process_data_files(inputpath,
                 # Check/process Data Snapshot file into human-readable snippets
                 snapshots = process_data_snapshot(filepath)
 
+                # Generate output dictionary
+                today = datetime.datetime.today()
+                logger.info(
+                    "Date published is {}".format(
+                        today.strftime(SNAPSHOT_DATE_SCHEMA)
+                    )
+                )
+                content_updates = {
+                    'date_published': today.strftime(SNAPSHOT_DATE_SCHEMA),
+                    'markets': snapshots
+                }
+
                 # Save data snapshot info as JSON
                 data_snapshot_path = expand_path(data_snapshot_path)
 
                 if not os.path.exists(os.path.dirname(data_snapshot_path)):
                     os.makedirs(os.path.dirname(data_snapshot_path))
 
-                save_json(data_snapshot_path, snapshots)
+                save_json(data_snapshot_path, content_updates)
 
             successes.append(filename)
 
@@ -405,7 +417,7 @@ def process_data_files(inputpath,
         )
     )
 
-    return snapshot_updates
+    return
 
 
 # Process state-by-state map files
@@ -876,6 +888,7 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
 
     # Load specified file as input data
     inputdata = load_csv(filepath)
+    logger.info("Loaded data snapshot file from {}".format(filepath))
 
     # Initialize output data
     data = []
