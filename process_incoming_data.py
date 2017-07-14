@@ -344,7 +344,6 @@ def process_data_files(inputpath,
 
     successes = []
     failures = []
-    snapshot_updates = []
 
     # For each file, open and munge data
     for filename in inputfiles:
