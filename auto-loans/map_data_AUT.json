@@ -1,206 +1,206 @@
 [
     {
         "name": "AL",
-        "value": "11.84"
+        "value": "13.24"
     },
     {
         "name": "AK",
-        "value": "-6.16"
+        "value": "-4.38"
     },
     {
         "name": "AZ",
-        "value": "8.31"
+        "value": "-0.52"
     },
     {
         "name": "AR",
-        "value": "-8.76"
+        "value": "-10.21"
     },
     {
         "name": "CA",
-        "value": "13.08"
+        "value": "0.55"
     },
     {
         "name": "CO",
-        "value": "-1.56"
+        "value": "-0.46"
     },
     {
         "name": "CT",
-        "value": "-3.37"
+        "value": "4.90"
     },
     {
         "name": "DE",
-        "value": "12.77"
+        "value": "8.34"
     },
     {
         "name": "DC",
-        "value": "-23.18"
+        "value": "17.87"
     },
     {
         "name": "FL",
-        "value": "7.40"
+        "value": "-1.19"
     },
     {
         "name": "GA",
-        "value": "3.21"
-    },
-    {
-        "name": "HI",
-        "value": "7.58"
-    },
-    {
-        "name": "ID",
-        "value": "17.60"
-    },
-    {
-        "name": "IL",
-        "value": "-2.10"
-    },
-    {
-        "name": "IN",
-        "value": "4.62"
-    },
-    {
-        "name": "IA",
-        "value": "-0.69"
-    },
-    {
-        "name": "KS",
-        "value": "-1.20"
-    },
-    {
-        "name": "KY",
-        "value": "4.19"
-    },
-    {
-        "name": "LA",
-        "value": "8.36"
-    },
-    {
-        "name": "ME",
-        "value": "4.29"
-    },
-    {
-        "name": "MD",
-        "value": "-1.09"
-    },
-    {
-        "name": "MA",
-        "value": "-3.47"
-    },
-    {
-        "name": "MI",
-        "value": "2.64"
-    },
-    {
-        "name": "MN",
         "value": "-4.05"
     },
     {
-        "name": "MS",
-        "value": "16.56"
+        "name": "HI",
+        "value": "-22.00"
     },
     {
-        "name": "MO",
-        "value": "7.77"
+        "name": "ID",
+        "value": "-1.40"
     },
     {
-        "name": "MT",
-        "value": "3.48"
+        "name": "IL",
+        "value": "0.80"
     },
     {
-        "name": "NE",
-        "value": "16.70"
+        "name": "IN",
+        "value": "-6.45"
     },
     {
-        "name": "NV",
-        "value": "10.31"
+        "name": "IA",
+        "value": "-3.89"
     },
     {
-        "name": "NH",
-        "value": "18.32"
+        "name": "KS",
+        "value": "-7.14"
     },
     {
-        "name": "NJ",
-        "value": "-2.03"
+        "name": "KY",
+        "value": "3.20"
     },
     {
-        "name": "NM",
-        "value": "-9.28"
+        "name": "LA",
+        "value": "-5.48"
     },
     {
-        "name": "NY",
-        "value": "-8.09"
+        "name": "ME",
+        "value": "4.52"
     },
     {
-        "name": "NC",
-        "value": "-10.35"
+        "name": "MD",
+        "value": "-7.80"
     },
     {
-        "name": "ND",
-        "value": "13.81"
+        "name": "MA",
+        "value": "-0.65"
     },
     {
-        "name": "OH",
-        "value": "1.83"
+        "name": "MI",
+        "value": "-0.70"
     },
     {
-        "name": "OK",
-        "value": "-5.32"
-    },
-    {
-        "name": "OR",
-        "value": "12.42"
-    },
-    {
-        "name": "PA",
-        "value": "-7.95"
-    },
-    {
-        "name": "RI",
-        "value": "8.95"
-    },
-    {
-        "name": "SC",
-        "value": "-9.03"
-    },
-    {
-        "name": "SD",
-        "value": "-2.45"
-    },
-    {
-        "name": "TN",
-        "value": "5.06"
-    },
-    {
-        "name": "TX",
-        "value": "-3.66"
-    },
-    {
-        "name": "UT",
-        "value": "1.59"
-    },
-    {
-        "name": "VT",
+        "name": "MN",
         "value": "-3.70"
     },
     {
+        "name": "MS",
+        "value": "0.05"
+    },
+    {
+        "name": "MO",
+        "value": "-9.83"
+    },
+    {
+        "name": "MT",
+        "value": "4.12"
+    },
+    {
+        "name": "NE",
+        "value": "-15.43"
+    },
+    {
+        "name": "NV",
+        "value": "-5.99"
+    },
+    {
+        "name": "NH",
+        "value": "-14.20"
+    },
+    {
+        "name": "NJ",
+        "value": "-3.69"
+    },
+    {
+        "name": "NM",
+        "value": "-10.71"
+    },
+    {
+        "name": "NY",
+        "value": "-3.02"
+    },
+    {
+        "name": "NC",
+        "value": "-5.78"
+    },
+    {
+        "name": "ND",
+        "value": "5.73"
+    },
+    {
+        "name": "OH",
+        "value": "5.66"
+    },
+    {
+        "name": "OK",
+        "value": "-15.47"
+    },
+    {
+        "name": "OR",
+        "value": "-1.78"
+    },
+    {
+        "name": "PA",
+        "value": "-3.72"
+    },
+    {
+        "name": "RI",
+        "value": "-4.42"
+    },
+    {
+        "name": "SC",
+        "value": "-0.28"
+    },
+    {
+        "name": "SD",
+        "value": "-8.09"
+    },
+    {
+        "name": "TN",
+        "value": "0.70"
+    },
+    {
+        "name": "TX",
+        "value": "-7.53"
+    },
+    {
+        "name": "UT",
+        "value": "-2.08"
+    },
+    {
+        "name": "VT",
+        "value": "21.74"
+    },
+    {
         "name": "VA",
-        "value": "-10.53"
+        "value": "-5.30"
     },
     {
         "name": "WA",
-        "value": "4.29"
+        "value": "-14.40"
     },
     {
         "name": "WV",
-        "value": "3.48"
+        "value": "-12.71"
     },
     {
         "name": "WI",
-        "value": "5.48"
+        "value": "-11.91"
     },
     {
         "name": "WY",
-        "value": "21.42"
+        "value": "-1.59"
     }
 ]
