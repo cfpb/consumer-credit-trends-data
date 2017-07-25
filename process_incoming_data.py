@@ -906,7 +906,7 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
         orig_fmt = human_numbers(float(orig), whole_units_only=1)
         vol_fmt = human_numbers(float(vol))
         yoy_num = "{:.1f}".format(abs(float(yoy)))
-        yoy_desc = PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
+        yoy_desc = PERCENT_CHANGE_DESCRIPTORS[float(yoy) > 0]
         yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
         out_dict = {'market_key': market,
