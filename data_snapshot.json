@@ -1,61 +1,61 @@
 {
-    "date_published": "2018-02-19",
+    "date_published": "2018-03-22",
     "markets": [
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "AUT",
             "num_originations": "2.0 million",
-            "value_originations": "$47.3 billion",
-            "year_over_year_change": "6.5% decrease"
+            "value_originations": "$43.7 billion",
+            "year_over_year_change": "1.8% increase"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "MTG",
-            "num_originations": "714,129",
-            "value_originations": "$194.4 billion",
-            "year_over_year_change": "2.3% increase"
+            "num_originations": "590,572",
+            "value_originations": "$157.2 billion",
+            "year_over_year_change": "26.5% increase"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "HCE",
-            "num_originations": "50,262",
-            "value_originations": "$1.6 billion",
-            "year_over_year_change": "17.0% decrease"
+            "num_originations": "44,835",
+            "value_originations": "$1.3 billion",
+            "year_over_year_change": "17.5% decrease"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "HLC",
-            "num_originations": "103,721",
-            "value_originations": "$11.3 billion",
-            "year_over_year_change": "3.6% decrease"
+            "num_originations": "87,312",
+            "value_originations": "$9.9 billion",
+            "year_over_year_change": "5.5% decrease"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "PER",
-            "num_originations": "1.5 million",
-            "value_originations": "$9.0 billion",
-            "year_over_year_change": "6.6% increase"
+            "num_originations": "1.3 million",
+            "value_originations": "$8.2 billion",
+            "year_over_year_change": "17.4% increase"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "RET",
-            "num_originations": "4.0 million",
-            "value_originations": "$9.4 billion",
-            "year_over_year_change": "14.2% decrease"
+            "num_originations": "2.3 million",
+            "value_originations": "$6.7 billion",
+            "year_over_year_change": "14.4% decrease"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "STU",
-            "num_originations": "406,848",
-            "value_originations": "$7.1 billion",
-            "year_over_year_change": "7.2% decrease"
+            "num_originations": "1.0 million",
+            "value_originations": "$11.8 billion",
+            "year_over_year_change": "19.8% increase"
         },
         {
-            "data_month": "2017-12-01",
+            "data_month": "2018-01-01",
             "market_key": "CRC",
-            "num_originations": "5.6 million",
-            "value_originations": "$31.4 billion",
-            "year_over_year_change": "3.4% decrease"
+            "num_originations": "5.0 million",
+            "value_originations": "$33.6 billion",
+            "year_over_year_change": "9.2% decrease"
         }
     ]
 }
