@@ -579,7 +579,7 @@ def process_group_file(filename, output_schema):
     for monthnum, group in proc.items():
         for groupname, value in group.items():
             # Parse for any text fixes required
-            if groupname in TEXT_FIXES.keys():
+            if groupname in TEXT_FIXES:
                 data.append([monthnum,
                              actual_date(monthnum),
                              value["adj"],
@@ -764,8 +764,7 @@ def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
     return True, [], []
 
 
-# JSON Output calls
-
+# JSON output processing
 def json_for_bar_chart(data):
     """Takes input data and returns formatted values for a JSON file"""
 
@@ -803,7 +802,7 @@ def json_for_group_bar_chart(data, val_cols, out_names):
     out = {}
 
     # Translate into JSON output columns
-    for col_key in tmp.keys():
+    for col_key in tmp:
         idx = val_cols.index(col_key)
         if idx < 0:
             raise IndexError("Key '{}' does not exist in {}".format(
@@ -845,13 +844,19 @@ def json_for_group_line_chart(data):
             groupname = groupname[4:]
 
         # Initialize if first time groupname is encountered
-        if groupname not in out.keys():
+        if groupname not in out:
             out[groupname] = {"adjusted": [], "unadjusted": []}
 
         try:
             millisec = sec * SEC_TO_MS
-            out[groupname]["adjusted"].append([millisec, float(val)])
-            out[groupname]["unadjusted"].append([millisec, float(val_unadj)])
+            out[groupname]["adjusted"].append([
+                millisec,
+                float(val)
+            ])
+            out[groupname]["unadjusted"].append([
+                millisec,
+                float(val_unadj)
+            ])
         except ValueError:
             # Discard "NA" values and other non-float-able values
             continue
