@@ -19,7 +19,7 @@ import json
 __author__ = "Consumer Financial Protection Bureau"
 __credits__ = ["Hillary Jeffrey"]
 __license__ = "CC0-1.0"
-__version__ = "0.3"
+__version__ = "1.0"
 __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
