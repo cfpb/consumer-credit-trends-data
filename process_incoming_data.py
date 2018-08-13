@@ -19,7 +19,7 @@ import json
 __author__ = "Consumer Financial Protection Bureau"
 __credits__ = ["Hillary Jeffrey"]
 __license__ = "CC0-1.0"
-__version__ = "1.0"
+__version__ = "1.1"
 __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
@@ -29,10 +29,13 @@ __status__ = "Development"
 DEFAULT_INPUT_FOLDER = "~/Github/consumer-credit-trends-data/data"
 DEFAULT_OUTPUT_FOLDER = "~/Github/consumer-credit-trends-data/processed_data/"
 
-# Data snapshot variables
-# Data snapshot default file name
+# Filenames for non-market-specific files:
+# Data snapshot, inquiry index
 SNAPSHOT_FNAME_KEY = "data_snapshot"
-# Text filler for data snapshot descriptors
+INQUIRY_INDEX_FNAME_KEY = "main_inquiry_series"
+
+# Text descriptors for data snapshots
+PERCENT_CHANGE_DESCRIPTORS = ["decrease", "increase"]
 MKT_DESCRIPTORS = {
     "AUT": ["Auto loans", "Dollar volume of new loans"],
     "CRC": ["Credit cards", "Aggregate credit limits of new cards"],
@@ -44,8 +47,6 @@ MKT_DESCRIPTORS = {
     "STU": ["Student loans", "Dollar volume of new loans"],
 }
 
-PERCENT_CHANGE_DESCRIPTORS = ["decrease", "increase"]
-
 # Market+.csv filename suffix length
 MKT_SFX_LEN = -8
 
@@ -54,6 +55,38 @@ BASE_YEAR = 2000
 SEC_TO_MS = 1000
 DATA_FILE_DATE_SCHEMA = "%Y-%m"
 SNAPSHOT_DATE_SCHEMA = "%Y-%m-%d"
+
+# Inquiry index input schema
+# This must match the files incoming from office of research
+INQUIRY_INDEX_INPUT_SCHEMA = [
+    "series",
+    "group",
+    "loan_type",
+    "open_month",
+    "var_name",
+    "archive_month",
+    "value",
+    "seasonal",
+    "value_yoy",
+    "seasonal_yoy"
+]
+# Find the correct array index regardless if column order changes
+COL_INQ_MKT = INQUIRY_INDEX_INPUT_SCHEMA.index("loan_type")
+COL_INQ_MONTH = INQUIRY_INDEX_INPUT_SCHEMA.index("open_month")
+COL_INQ_DATA_TYPE = INQUIRY_INDEX_INPUT_SCHEMA.index("var_name")
+COL_INQ_UNADJ = INQUIRY_INDEX_INPUT_SCHEMA.index("value")
+COL_INQ_SEASONAL = INQUIRY_INDEX_INPUT_SCHEMA.index("seasonal")
+
+# String in 'var_name' column when it contains rate data
+INQ_RATE = "inquiry_rate"
+
+# Output column name schema
+INQUIRY_INDEX_OUTPUT_SCHEMA = [
+    "month",
+    "date",
+    "inquiry_rate",
+    "unadjusted_inquiry_rate"
+]
 
 # Input/output schemas
 MAP_OUTPUT_SCHEMA = ["fips_code", "state_abbr", "value"]
@@ -178,7 +211,7 @@ FIPS_CODES = {1:  "AL",
 
 
 # Set up logging
-logging.basicConfig(level="WARNING")
+logging.basicConfig(level="INFO")
 logger = logging.getLogger(__name__)
 
 
@@ -197,7 +230,7 @@ def save_csv(filename, content, writemode='wb'):
         writer = csv.writer(csvfile, delimiter=',')
         writer.writerows(content)
 
-    return True
+    logger.debug("Wrote file '{}'".format(filename))
 
 
 def save_json(filename, json_content, writemode='wb'):
@@ -215,7 +248,7 @@ def save_json(filename, json_content, writemode='wb'):
                             indent=4,
                             separators=(',', ': ')))
 
-    return True
+    logger.debug("Wrote file '{}'".format(filename))
 
 
 def load_csv(filename, skipheaderrow=True):
@@ -338,6 +371,14 @@ def process_data_files(inputpath,
                        data_snapshot_path=''):
     """Processes raw csv data from the Office of Research"""
     inputfiles = get_csv_list(inputpath)
+    logger.debug("Found files:\n{}".format(inputfiles))
+    logger.info(
+        "Found {} csv files in '{}'".format(
+            len(inputfiles),
+            inputpath
+        )
+    )
+
     if len(inputfiles) == 0:
         logger.warn("No csv data files found in {}".format(inputpath))
         return []
@@ -352,14 +393,18 @@ def process_data_files(inputpath,
         market = find_market(filename)
 
         if market is None:
-            if data_snapshot_fname not in filename:
-                logger.warn(
-                    "Found file '{}' does not specify market".format(filename)
-                )
-                failures.append(filename)
-                continue
+            if data_snapshot_fname in filename:
+                if len(data_snapshot_path) <= 0:
+                    logger.debug(
+                        "Data snapshot output path is not specified."
+                    )
+                    logger.debug(
+                        "To process data snapshot file, specify " +
+                        "the --data-snapshot-path command-line " +
+                        "argument."
+                    )
+                    continue
 
-            if len(data_snapshot_path) > 0:
                 # Check/process Data Snapshot file into human-readable snippets
                 snapshots = process_data_snapshot(filepath)
 
@@ -382,8 +427,42 @@ def process_data_files(inputpath,
                     os.makedirs(os.path.dirname(data_snapshot_path))
 
                 save_json(data_snapshot_path, content_updates)
+                successes.append(filename)
 
-            successes.append(filename)
+            # Look for inquiry index summary files
+            elif INQUIRY_INDEX_FNAME_KEY in filename:
+                logger.debug(
+                    "Processing inquiry index file '{}'".format(filename)
+                )
+                cond, databymkt, jsonbymkt = process_inquiry_index(filepath)
+
+                if cond:
+                    for mkt in databymkt:
+                        # Determine output directory
+                        outpath = os.path.join(
+                            outputpath,
+                            MARKET_NAMES[mkt],
+                            "inquiry_rate_{}.csv".format(mkt)
+                        )
+
+                        if len(databymkt[mkt]) > 0:
+                            save_csv(outpath, databymkt[mkt])
+                            save_json(
+                                outpath.replace(".csv", ".json"),
+                                jsonbymkt[mkt]
+                            )
+
+                    successes.append(filename)
+                else:
+                    failures.append(filename)
+
+            # Doesn't match an expected filename; may not be a CCT file
+            else:
+                logger.info(
+                    "Ignoring file '{}' as not CCT related".format(filename)
+                )
+                failures.append(filename)
+                continue
 
         else:
             # Run file per market-type
@@ -398,25 +477,86 @@ def process_data_files(inputpath,
                 # Determine output directory
                 outpath = os.path.join(outputpath, market, filename)
                 if len(data) > 0:
-                    cond = save_csv(outpath, data)
-                    cond &= save_json(outpath.replace(".csv", ".json"), json)
+                    save_csv(outpath, data)
+                    save_json(outpath.replace(".csv", ".json"), json)
 
-                if cond:
-                    successes.append(filename)
-                else:
-                    failures.append(filename)
+                successes.append(filename)
 
             else:
                 failures.append(filename)
 
+    # Summarize processing statistics
     logger.info(
-        "** Processed {} of {} input data files successfully".format(
-            len(successes),
-            len(inputfiles)
+        "** Processed {} input data files successfully".format(
+            len(successes)
         )
     )
 
+    if len(failures) > 0:
+        logger.warn(
+            "** Unable to process {} input data files".format(
+                len(failures)
+            )
+        )
+
     return
+
+
+# Process inquiry index file
+def process_inquiry_index(filename, output_schema=INQUIRY_INDEX_OUTPUT_SCHEMA):
+    """Processes specified inquiry file and
+    returns output data and json per the output_schema"""
+    logger.debug("Begin process_inquiry_index")
+    # Load specified file as input data table
+    inputdata = load_csv(filename)
+
+    # Initialize output data as a dictionary for supporting different markets
+    data = {}
+
+    # Split each market into its own output data table
+    for row in inputdata:
+        # This file may contain several different types of data
+        # We're only interested in inquiry_rate
+        if INQ_RATE not in row[COL_INQ_DATA_TYPE]:
+            continue
+
+        # Extract data from row
+        inq_rate_unadj = row[COL_INQ_UNADJ]
+        inq_rate_adj = row[COL_INQ_SEASONAL]
+        monthnum = int(row[COL_INQ_MONTH])
+        market_type = row[COL_INQ_MKT]
+
+        if market_type not in data:
+            # Verify market_type exists in the short-forms
+            if market_type not in MARKET_NAMES:
+                logger.warn(
+                    "Invalid market '{}' in inquiry indices".format(
+                        market_type
+                    )
+                )
+                continue
+
+            # Initialize the output for this market
+            logger.debug("First entry found for {} market".format(market_type))
+            data[market_type] = [output_schema]
+
+        # Save processed row to output data
+        data[market_type].append([
+            monthnum,
+            actual_date(monthnum),
+            inq_rate_adj,
+            inq_rate_unadj
+        ])
+
+    # If output data exists, JSON-format it for graph output files
+    if len(data) > 1:
+        json = {}
+        for mkt_key in data:
+            if len(data[mkt_key]) > 1:
+                json[mkt_key] = json_for_line_chart(data[mkt_key][1:])
+        return True, data, json
+
+    return True, [], []
 
 
 # Process state-by-state map files
