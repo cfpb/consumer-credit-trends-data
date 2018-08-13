@@ -372,6 +372,12 @@ def process_data_files(inputpath,
     """Processes raw csv data from the Office of Research"""
     inputfiles = get_csv_list(inputpath)
     logger.debug("Found files:\n{}".format(inputfiles))
+    logger.info(
+        "Found {} csv files in '{}'".format(
+            len(inputfiles),
+            inputpath
+        )
+    )
 
     if len(inputfiles) == 0:
         logger.warn("No csv data files found in {}".format(inputpath))
@@ -390,9 +396,11 @@ def process_data_files(inputpath,
             if data_snapshot_fname in filename:
                 if len(data_snapshot_path) <= 0:
                     logger.info(
-                        "Ignoring {} because data snapshot output path " +
-                        "is not specified.\nTo process this file, " +
-                        "specify the --data-snapshot-path argument"
+                        "Ignoring {} because data snapshot " +
+                        "output path is not specified.\n" +
+                        "To process this file, specify the " +
+                        "--data-snapshot-path command-line " +
+                        "argument".format(data_snapshot_fname)
                     )
                     continue
 
@@ -522,7 +530,7 @@ def process_inquiry_index(filename, output_schema=INQUIRY_INDEX_OUTPUT_SCHEMA):
             if market_type not in MARKET_NAMES:
                 logger.warn(
                     "Invalid market '{}' in inquiry indices".format(
-                    market_type
+                        market_type
                     )
                 )
                 continue
