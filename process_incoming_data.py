@@ -395,12 +395,13 @@ def process_data_files(inputpath,
         if market is None:
             if data_snapshot_fname in filename:
                 if len(data_snapshot_path) <= 0:
-                    logger.info(
-                        "Ignoring {} because data snapshot " +
-                        "output path is not specified.\n" +
-                        "To process this file, specify the " +
-                        "--data-snapshot-path command-line " +
-                        "argument".format(data_snapshot_fname)
+                    logger.debug(
+                        "Data snapshot output path is not specified."
+                    )
+                    logger.debug(
+                        "To process data snapshot file, specify " +
+                        "the --data-snapshot-path command-line " +
+                        "argument."
                     )
                     continue
 
@@ -430,7 +431,7 @@ def process_data_files(inputpath,
 
             # Look for inquiry index summary files
             elif INQUIRY_INDEX_FNAME_KEY in filename:
-                logger.info(
+                logger.debug(
                     "Processing inquiry index file '{}'".format(filename)
                 )
                 cond, databymkt, jsonbymkt = process_inquiry_index(filepath)
@@ -457,7 +458,7 @@ def process_data_files(inputpath,
 
             # Doesn't match an expected filename; may not be a CCT file
             else:
-                logger.warn(
+                logger.info(
                     "Ignoring file '{}' as not CCT related".format(filename)
                 )
                 failures.append(filename)
