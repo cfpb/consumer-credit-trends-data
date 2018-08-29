@@ -56,36 +56,18 @@ SEC_TO_MS = 1000
 DATA_FILE_DATE_SCHEMA = "%Y-%m"
 SNAPSHOT_DATE_SCHEMA = "%Y-%m-%d"
 
-# Inquiry index input schema
-# This must match the files incoming from office of research
-INQUIRY_INDEX_INPUT_SCHEMA = [
-    "series",
-    "group",
-    "loan_type",
-    "open_month",
-    "var_name",
-    "archive_month",
-    "value",
-    "seasonal",
-    "value_yoy",
-    "seasonal_yoy"
-]
-# Find the correct array index regardless if column order changes
-COL_INQ_MKT = INQUIRY_INDEX_INPUT_SCHEMA.index("loan_type")
-COL_INQ_MONTH = INQUIRY_INDEX_INPUT_SCHEMA.index("open_month")
-COL_INQ_DATA_TYPE = INQUIRY_INDEX_INPUT_SCHEMA.index("var_name")
-COL_INQ_UNADJ = INQUIRY_INDEX_INPUT_SCHEMA.index("value")
-COL_INQ_SEASONAL = INQUIRY_INDEX_INPUT_SCHEMA.index("seasonal")
-
-# String in 'var_name' column when it contains rate data
-INQ_RATE = "inquiry_rate"
-
-# Output column name schema
+# Output column name schema for index files
 INQUIRY_INDEX_OUTPUT_SCHEMA = [
     "month",
     "date",
     "inquiry_rate",
     "unadjusted_inquiry_rate"
+]
+DENIAL_INDEX_OUTPUT_SCHEMA = [
+    "month",
+    "date",
+    "inferred_denial_rate",
+    "unadjusted_inferred_denial_rate"
 ]
 
 # Input/output schemas
@@ -502,63 +484,6 @@ def process_data_files(inputpath,
     return
 
 
-# Process inquiry index file
-def process_inquiry_index(filename, output_schema=INQUIRY_INDEX_OUTPUT_SCHEMA):
-    """Processes specified inquiry file and
-    returns output data and json per the output_schema"""
-    logger.debug("Begin process_inquiry_index")
-    # Load specified file as input data table
-    inputdata = load_csv(filename)
-
-    # Initialize output data as a dictionary for supporting different markets
-    data = {}
-
-    # Split each market into its own output data table
-    for row in inputdata:
-        # This file may contain several different types of data
-        # We're only interested in inquiry_rate
-        if INQ_RATE not in row[COL_INQ_DATA_TYPE]:
-            continue
-
-        # Extract data from row
-        inq_rate_unadj = row[COL_INQ_UNADJ]
-        inq_rate_adj = row[COL_INQ_SEASONAL]
-        monthnum = int(row[COL_INQ_MONTH])
-        market_type = row[COL_INQ_MKT]
-
-        if market_type not in data:
-            # Verify market_type exists in the short-forms
-            if market_type not in MARKET_NAMES:
-                logger.warn(
-                    "Invalid market '{}' in inquiry indices".format(
-                        market_type
-                    )
-                )
-                continue
-
-            # Initialize the output for this market
-            logger.debug("First entry found for {} market".format(market_type))
-            data[market_type] = [output_schema]
-
-        # Save processed row to output data
-        data[market_type].append([
-            monthnum,
-            actual_date(monthnum),
-            inq_rate_adj,
-            inq_rate_unadj
-        ])
-
-    # If output data exists, JSON-format it for graph output files
-    if len(data) > 1:
-        json = {}
-        for mkt_key in data:
-            if len(data[mkt_key]) > 1:
-                json[mkt_key] = json_for_line_chart(data[mkt_key][1:])
-        return True, data, json
-
-    return True, [], []
-
-
 # Process state-by-state map files
 
 def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
@@ -584,6 +509,22 @@ def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
         return True, data, json
 
     return True, [], []
+
+
+# Process inquiry index file
+def process_inquiry_index(filename):
+    """Call proess_file_summary on the specified inquiry file and
+    returns output data and json per the output_schema"""
+    logger.debug("Running process_inquiry_index")
+    return process_file_summary(filename, INQUIRY_INDEX_OUTPUT_SCHEMA)
+
+
+# Process inferred denial index file
+def process_denial_index(filename):
+    """Processes specified inferred denial file and
+    returns output data and json per the output_schema"""
+    logger.debug("Running process_denial_index")
+    return process_file_summary(filename, DENIAL_INDEX_OUTPUT_SCHEMA)
 
 
 # Process summary files with loan numbers or volumes
@@ -880,6 +821,12 @@ def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
             proc[monthnum]["num"] = value
         elif "volume" in type_str.lower():
             proc[monthnum]["vol"] = value
+        elif "inquiry" in type_str.lower():
+            # Ignore 'Inquiry Rate' entries in current output
+            pass
+        elif "denial" in type_str.lower():
+            # Ignore 'Denial Rate' entries in current output
+            pass
         else:
             raise TypeError("YOY Summary Data row (below) improperly " +
                             "formatted in {}\n{}".format(filename, row))
@@ -1078,6 +1025,8 @@ FILE_PREFIXES = {"map_data":                 process_map,
                  "yoy_data_age_group":       process_group_age_yoy,
                  "yoy_data_income_level":    process_group_income_yoy,
                  "yoy_data_score_level":     process_group_score_yoy,
+                 "inq_data":                 process_inquiry_index,
+                 "den_data":                 process_denial_index,
                  }
 
 
