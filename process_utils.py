@@ -24,6 +24,10 @@ __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
 
+# Constants
+
+SEC_TO_MS = 1000
+
 
 # Set up logging
 logging.basicConfig(level="INFO")
@@ -92,6 +96,11 @@ def get_csv_list(path):
              and os.path.isfile(os.path.join(path, f))]
 
     return files
+
+
+def milliseconds(sec):
+    """Convert seconds to milliseconds"""
+    return sec * SEC_TO_MS
 
 
 # Unix Epoch conversion from http://stackoverflow.com/questions/11743019/

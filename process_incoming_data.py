@@ -13,8 +13,8 @@ import datetime
 import logging
 
 # Local imports
-from process_globals import *
-from process_utils import *
+import process_globals as cfg
+import process_utils as util
 
 
 __author__ = "Consumer Financial Protection Bureau"
@@ -25,6 +25,10 @@ __maintainer__ = "CFPB"
 __email__ = "tech@cfpb.gov"
 __status__ = "Development"
 
+# Constants
+# Market+.csv filename suffix length
+MKT_SFX_LEN = -8
+
 
 # Set up logging
 logging.basicConfig(level="INFO")
@@ -34,15 +38,16 @@ logger = logging.getLogger(__name__)
 # Utility Methods
 # Generalized utility methods are found in process_utils.py
 
-def load_paths(inpath=DEFAULT_INPUT_FOLDER, outpath=DEFAULT_OUTPUT_FOLDER):
+def load_paths(inpath=cfg.DEFAULT_INPUT_FOLDER,
+               outpath=cfg.DEFAULT_OUTPUT_FOLDER):
     """Loads the root path and destination paths and performs path checking"""
-    inpath = expand_path(inpath)
-    outpath = expand_path(outpath)
+    inpath = util.expand_path(inpath)
+    outpath = util.expand_path(outpath)
 
     return inpath, outpath
 
 
-def find_market(input, possible_names=MARKET_NAMES):
+def find_market(input, possible_names=cfg.MARKET_NAMES):
     """Uses the input string and a specified dictionary of market names to
     determine which credit market the input string describes."""
     for abbr, name in possible_names.items():
@@ -52,7 +57,7 @@ def find_market(input, possible_names=MARKET_NAMES):
     return None
 
 
-def actual_date(month, schema=DATA_FILE_DATE_SCHEMA):
+def actual_date(month, schema=cfg.DATA_FILE_DATE_SCHEMA):
     """
     Takes a month number and computes a date from it.
     January 2000 = month zero
@@ -60,7 +65,7 @@ def actual_date(month, schema=DATA_FILE_DATE_SCHEMA):
     addl_years = int(month/12)
     addl_months = (month % 12) + 1  # offset for January: month input is 1-12
 
-    date = datetime.date(BASE_YEAR + addl_years, addl_months, 1)
+    date = datetime.date(cfg.BASE_YEAR + addl_years, addl_months, 1)
 
     return date.strftime(schema)
 
@@ -69,10 +74,10 @@ def actual_date(month, schema=DATA_FILE_DATE_SCHEMA):
 
 def process_data_files(inputpath,
                        outputpath,
-                       data_snapshot_fname=SNAPSHOT_FNAME_KEY,
+                       data_snapshot_fname=cfg.SNAPSHOT_FNAME_KEY,
                        data_snapshot_path=''):
     """Processes raw csv data from the Office of Research"""
-    inputfiles = get_csv_list(inputpath)
+    inputfiles = util.get_csv_list(inputpath)
     logger.debug("Found files:\n{}".format(inputfiles))
     logger.info(
         "Found {} csv files in '{}'".format(
@@ -114,21 +119,21 @@ def process_data_files(inputpath,
                 today = datetime.datetime.today()
                 logger.info(
                     "Date published is {}".format(
-                        today.strftime(SNAPSHOT_DATE_SCHEMA)
+                        today.strftime(cfg.SNAPSHOT_DATE_SCHEMA)
                     )
                 )
                 content_updates = {
-                    'date_published': today.strftime(SNAPSHOT_DATE_SCHEMA),
+                    'date_published': today.strftime(cfg.SNAPSHOT_DATE_SCHEMA),
                     'markets': snapshots
                 }
 
                 # Save data snapshot info as JSON
-                data_snapshot_path = expand_path(data_snapshot_path)
+                data_snapshot_path = util.expand_path(data_snapshot_path)
 
                 if not os.path.exists(os.path.dirname(data_snapshot_path)):
                     os.makedirs(os.path.dirname(data_snapshot_path))
 
-                save_json(data_snapshot_path, content_updates)
+                util.save_json(data_snapshot_path, content_updates)
 
                 logger.info(
                     "Saved output data snapshot information to '{}'".format(
@@ -139,7 +144,7 @@ def process_data_files(inputpath,
                 successes.append(filename)
 
             # Look for inquiry index summary files
-            elif INQUIRY_INDEX_FNAME_KEY in filename:
+            elif cfg.INQUIRY_INDEX_FNAME_KEY in filename:
                 logger.debug(
                     "Processing inquiry index file '{}'".format(filename)
                 )
@@ -150,13 +155,13 @@ def process_data_files(inputpath,
                         # Determine output directory
                         outpath = os.path.join(
                             outputpath,
-                            MARKET_NAMES[mkt],
+                            cfg.MARKET_NAMES[mkt],
                             "inquiry_rate_{}.csv".format(mkt)
                         )
 
                         if len(databymkt[mkt]) > 0:
-                            save_csv(outpath, databymkt[mkt])
-                            save_json(
+                            util.save_csv(outpath, databymkt[mkt])
+                            util.save_json(
                                 outpath.replace(".csv", ".json"),
                                 jsonbymkt[mkt]
                             )
@@ -186,8 +191,8 @@ def process_data_files(inputpath,
                 # Determine output directory
                 outpath = os.path.join(outputpath, market, filename)
                 if len(data) > 0:
-                    save_csv(outpath, data)
-                    save_json(outpath.replace(".csv", ".json"), json)
+                    util.save_csv(outpath, data)
+                    util.save_json(outpath.replace(".csv", ".json"), json)
 
                 successes.append(filename)
 
@@ -213,13 +218,13 @@ def process_data_files(inputpath,
 
 # Process state-by-state map files
 
-def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
+def process_map(filename, output_schema=cfg.MAP_OUTPUT_SCHEMA):
     """Processes specified map file and outputs data per the schema"""
     # Input  columns: "state", "value"
     # Output columns: "fips_code", "state_abbr", "value"
 
     # Load specified file as input data
-    inputdata = load_csv(filename)
+    inputdata = util.load_csv(filename)
 
     # Initialize output data with column headers
     data = [output_schema]
@@ -228,7 +233,7 @@ def process_map(filename, output_schema=MAP_OUTPUT_SCHEMA):
     # TODO: Add error handling for unsupported FIPS codes
     # TODO: Make sure all 50 states (or other expected data) is represented
     for row in inputdata:
-        data.append([row[0], FIPS_CODES[int(row[0])], row[1]])
+        data.append([row[0], cfg.FIPS_CODES[int(row[0])], row[1]])
 
     # Check if data exists and JSON-format
     if len(data) > 1:
@@ -243,7 +248,7 @@ def process_inquiry_index(filename):
     """Call proess_file_summary on the specified inquiry file and
     returns output data and json per the output_schema"""
     logger.debug("Running process_inquiry_index")
-    return process_file_summary(filename, INQUIRY_INDEX_OUTPUT_SCHEMA)
+    return process_file_summary(filename, cfg.INQUIRY_INDEX_OUTPUT_SCHEMA)
 
 
 # Process inferred denial index file
@@ -251,7 +256,7 @@ def process_denial_index(filename):
     """Processes specified inferred denial file and
     returns output data and json per the output_schema"""
     logger.debug("Running process_denial_index")
-    return process_file_summary(filename, DENIAL_INDEX_OUTPUT_SCHEMA)
+    return process_file_summary(filename, cfg.DENIAL_INDEX_OUTPUT_SCHEMA)
 
 
 # Process summary files with loan numbers or volumes
@@ -259,20 +264,20 @@ def process_denial_index(filename):
 def process_num_summary(filename):
     """Calls process_file_summary with correct output schema"""
     # Output columns: "month", "date", "num", "num_unadj"
-    return process_file_summary(filename, SUMMARY_NUM_OUTPUT_SCHEMA)
+    return process_file_summary(filename, cfg.SUMMARY_NUM_OUTPUT_SCHEMA)
 
 
 def process_vol_summary(filename):
     """Calls process_file_summary with correct output schema"""
     # Output columns: "month", "date", "vol", "vol_unadj"
-    return process_file_summary(filename, SUMMARY_VOL_OUTPUT_SCHEMA)
+    return process_file_summary(filename, cfg.SUMMARY_VOL_OUTPUT_SCHEMA)
 
 
 def process_file_summary(filename, output_schema):
     """Processes specified summary file and outputs data per the schema"""
 
     # Load specified file as input data
-    inputdata = load_csv(filename)
+    inputdata = util.load_csv(filename)
 
     # Initialize output data with column headers
     data = []
@@ -324,8 +329,8 @@ def process_group_age_vol(filename):
     """Calls process_group_file with correct
     group and output schema"""
 
-    schema = list(GROUP_VOL_OUTPUT_SCHEMA)
-    schema[-1] = schema[-1].format(AGE)
+    schema = list(cfg.GROUP_VOL_OUTPUT_SCHEMA)
+    schema[-1] = schema[-1].format(cfg.AGE)
 
     return process_group_file(filename, schema)
 
@@ -333,8 +338,8 @@ def process_group_age_vol(filename):
 def process_group_income_vol(filename):
     """Calls process_group_file with correct group and output schema"""
 
-    schema = list(GROUP_VOL_OUTPUT_SCHEMA)
-    schema[-1] = schema[-1].format(INCOME)
+    schema = list(cfg.GROUP_VOL_OUTPUT_SCHEMA)
+    schema[-1] = schema[-1].format(cfg.INCOME)
 
     return process_group_file(filename, schema)
 
@@ -343,8 +348,8 @@ def process_group_score_vol(filename):
     """Calls process_group_file with correct
     group and output schema"""
 
-    schema = list(GROUP_VOL_OUTPUT_SCHEMA)
-    schema[-1] = schema[-1].format(SCORE)
+    schema = list(cfg.GROUP_VOL_OUTPUT_SCHEMA)
+    schema[-1] = schema[-1].format(cfg.SCORE)
 
     return process_group_file(filename, schema)
 
@@ -353,7 +358,7 @@ def process_group_file(filename, output_schema):
     """Processes specified group volume file and outputs data per the schema"""
 
     # Load specified file as input data
-    inputdata = load_csv(filename)
+    inputdata = util.load_csv(filename)
 
     # Initialize output data with column headers
     data = []
@@ -387,12 +392,12 @@ def process_group_file(filename, output_schema):
     for monthnum, group in proc.items():
         for groupname, value in group.items():
             # Parse for any text fixes required
-            if groupname in TEXT_FIXES:
+            if groupname in cfg.TEXT_FIXES:
                 data.append([monthnum,
                              actual_date(monthnum),
                              value["adj"],
                              value["unadj"],
-                             TEXT_FIXES[groupname]])
+                             cfg.TEXT_FIXES[groupname]])
             else:
                 data.append([monthnum,
                              actual_date(monthnum),
@@ -419,29 +424,12 @@ def process_group_file(filename, output_schema):
 def process_group_age_yoy(filename):
     """alls process_group_yoy_groups with correct group and output schema"""
     postfix = "{}_yoy"
-    output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
-    output_schema += [postfix.format(gname) for gname in AGE_YOY_COLS]
-
-    cond, data = process_group_yoy_groups(filename, AGE_YOY_IN, output_schema)
-
-    # Format for JSON
-    json = []
-    if len(data) > 1:
-        json = json_for_group_bar_chart(data[1:], AGE_YOY_COLS, AGE_YOY_JSON)
-
-    return cond, data, json
-
-
-def process_group_income_yoy(filename):
-    """Calls process_group_yoy_groups with correct group and output schema"""
-    # Generate output schema from group YOY column names
-    postfix = "{}_yoy"
-    output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
-    output_schema += [postfix.format(gname) for gname in INCOME_YOY_COLS]
+    output_schema = list(cfg.GROUP_YOY_OUTPUT_SCHEMA)
+    output_schema += [postfix.format(gname) for gname in cfg.AGE_YOY_COLS]
 
     cond, data = process_group_yoy_groups(
         filename,
-        INCOME_YOY_IN,
+        cfg.AGE_YOY_IN,
         output_schema
     )
 
@@ -450,8 +438,33 @@ def process_group_income_yoy(filename):
     if len(data) > 1:
         json = json_for_group_bar_chart(
             data[1:],
-            INCOME_YOY_COLS,
-            INCOME_YOY_JSON
+            cfg.AGE_YOY_COLS,
+            cfg.AGE_YOY_JSON
+        )
+
+    return cond, data, json
+
+
+def process_group_income_yoy(filename):
+    """Calls process_group_yoy_groups with correct group and output schema"""
+    # Generate output schema from group YOY column names
+    postfix = "{}_yoy"
+    output_schema = list(cfg.GROUP_YOY_OUTPUT_SCHEMA)
+    output_schema += [postfix.format(gname) for gname in cfg.INCOME_YOY_COLS]
+
+    cond, data = process_group_yoy_groups(
+        filename,
+        cfg.INCOME_YOY_IN,
+        output_schema
+    )
+
+    # Format for JSON
+    json = []
+    if len(data) > 1:
+        json = json_for_group_bar_chart(
+            data[1:],
+            cfg.INCOME_YOY_COLS,
+            cfg.INCOME_YOY_JSON
         )
 
     return cond, data, json
@@ -461,12 +474,12 @@ def process_group_score_yoy(filename):
     """Calls process_group_yoy_groups with correct group and output schema"""
     # Generate output schema from group YOY column names
     postfix = "{}_yoy"
-    output_schema = list(GROUP_YOY_OUTPUT_SCHEMA)
-    output_schema += [postfix.format(gname) for gname in SCORE_YOY_COLS]
+    output_schema = list(cfg.GROUP_YOY_OUTPUT_SCHEMA)
+    output_schema += [postfix.format(gname) for gname in cfg.SCORE_YOY_COLS]
 
     cond, data = process_group_yoy_groups(
         filename,
-        SCORE_YOY_IN,
+        cfg.SCORE_YOY_IN,
         output_schema
     )
 
@@ -475,8 +488,8 @@ def process_group_score_yoy(filename):
     if len(data) > 1:
         json = json_for_group_bar_chart(
             data[1:],
-            SCORE_YOY_COLS,
-            SCORE_YOY_JSON
+            cfg.SCORE_YOY_COLS,
+            cfg.SCORE_YOY_JSON
         )
 
     return cond, data, json
@@ -487,7 +500,7 @@ def process_group_yoy_groups(filename, group_names, output_schema):
     per the provided output schema"""
 
     # Load specified file as input data
-    inputdata = load_csv(filename)
+    inputdata = util.load_csv(filename)
 
     # Initialize output data with column headers
     data = []
@@ -526,13 +539,13 @@ def process_group_yoy_groups(filename, group_names, output_schema):
     return True, []
 
 
-def process_yoy_summary(filename, output_schema=YOY_SUMMARY_OUTPUT_SCHEMA):
+def process_yoy_summary(filename, output_schema=cfg.YOY_SUMMARY_OUTPUT_SCHEMA):
     """Processes specified year-over-year summary file and outputs data
     per the provided output schema"""
     # Output columns: "month", "date", "yoy_num", "yoy_vol"
 
     # Load specified file as input data
-    inputdata = load_csv(filename)
+    inputdata = util.load_csv(filename)
 
     # Initialize output data
     data = []
@@ -590,13 +603,14 @@ def json_for_bar_chart(data):
     outvol = []
 
     for month, date, yoy_num, yoy_vol in data:
-        sec = epochtime(date, schema=DATA_FILE_DATE_SCHEMA)
+        sec = util.epochtime(date, schema=cfg.DATA_FILE_DATE_SCHEMA)
         try:
-            outnum.append([sec * SEC_TO_MS, float(yoy_num)])
-            outvol.append([sec * SEC_TO_MS, float(yoy_vol)])
+            outnum.append([util.milliseconds(sec), float(yoy_num)])
+            outvol.append([util.milliseconds(sec), float(yoy_vol)])
         except ValueError:
-            logger.debug("Ignore ValueError: Discard 'NA' and other " +
-                "non-float-able values")
+            logger.debug(
+                "Ignore ValueError: Discard 'NA' and other non-float values"
+            )
             continue
 
     return {"Number of Loans": outnum, "Dollar Volume": outvol}
@@ -611,14 +625,18 @@ def json_for_group_bar_chart(data, val_cols, out_names):
 
     # Group bar charts (yoy) have a variable numbers of columns by groups
     for row in data:
-        sec = epochtime(row[1])
+        sec = util.epochtime(row[1])
         for colnum in range(len(val_cols)):
             try:
                 tmp_col = val_cols[colnum]
-                tmp[tmp_col].append([sec * SEC_TO_MS, float(row[2+colnum])])
+                tmp[tmp_col].append(
+                    [util.milliseconds(sec), float(row[2+colnum])]
+                )
             except ValueError:
-                logger.debug("Ignore ValueError: Discard 'NA' and other " +
-                "non-float-able values")
+                logger.debug(
+                    "Ignore ValueError: Discard 'NA' and other " +
+                    "non-float values"
+                )
                 continue
 
     out = {}
@@ -640,14 +658,15 @@ def json_for_line_chart(data):
 
     out = {"adjusted": [], "unadjusted": []}
 
-    for monthnum, date, val, val_unadj in data:
-        sec = epochtime(date)
+    for monthnum, date, v_adj, v_unadj in data:
+        sec = util.epochtime(date)
         try:
-            out["adjusted"].append([sec * SEC_TO_MS, float(val)])
-            out["unadjusted"].append([sec * SEC_TO_MS, float(val_unadj)])
+            out["adjusted"].append([util.milliseconds(sec), float(v_adj)])
+            out["unadjusted"].append([util.milliseconds(sec), float(v_unadj)])
         except ValueError:
-            logger.debug("Ignore ValueError: Discard 'NA' and other " +
-                "non-float-able values")
+            logger.debug(
+                "Ignore ValueError: Discard 'NA' and other non-float values"
+            )
             continue
 
     return out
@@ -659,8 +678,8 @@ def json_for_group_line_chart(data):
     out = {}
 
     # Group line charts (vol/num) have the group name in the last column
-    for month, date, val, val_unadj, groupname in data:
-        sec = epochtime(date)
+    for month, date, v_adj, v_unadj, groupname in data:
+        sec = util.epochtime(date)
 
         # JSON fix for age groups - strip off the "Age "
         if groupname.lower().find("age ") == 0:
@@ -671,18 +690,18 @@ def json_for_group_line_chart(data):
             out[groupname] = {"adjusted": [], "unadjusted": []}
 
         try:
-            millisec = sec * SEC_TO_MS
             out[groupname]["adjusted"].append([
-                millisec,
-                float(val)
+                util.milliseconds(sec),
+                float(v_adj)
             ])
             out[groupname]["unadjusted"].append([
-                millisec,
-                float(val_unadj)
+                util.milliseconds(sec),
+                float(v_unadj)
             ])
         except ValueError:
-            logger.debug("Ignore ValueError: Discard 'NA' and other " +
-                "non-float-able values")
+            logger.debug(
+                "Ignore ValueError: Discard 'NA' and other non-float values"
+            )
             continue
 
     return out
@@ -701,25 +720,25 @@ def json_for_tile_map(data):
         try:
             value = "{:0.2f}".format(float(value) * 100)
         except ValueError:
-            logger.debug("Ignore ValueError: Leave 'NA' as-is for states " +
-                "if found")
+            logger.debug(
+                "Ignore ValueError: Leave 'NA' as-is for states if found"
+            )
 
         out.append({"name": state, "value": value})
 
     return out
 
 
-def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
+def process_data_snapshot(filepath, date_schema=cfg.SNAPSHOT_DATE_SCHEMA):
     """Process a file at filepath that contains data snapshot information
     for all markets and prepare human-readable text for output.
     Returns a list of market-data dictionaries."""
 
     # Load specified file as input data
-    inputdata = load_csv(filepath)
+    inputdata = util.load_csv(filepath)
     logger.info("Loaded data snapshot file from {}".format(filepath))
 
     # Initialize output data
-    data = []
     market_info = {}
 
     for row in inputdata:
@@ -739,12 +758,12 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
         # Each variable has value and value_yoy
         if "originations" in var_name:
             # Calculate originations
-            orig_fmt = human_numbers(float(value), whole_units_only=1)
+            orig_fmt = util.human_numbers(float(value), whole_units_only=1)
 
             # Calculate year-over-year change in originations
             yoy = float(value_yoy)
             yoy_num = "{:.1f}".format(abs(yoy))
-            yoy_desc = PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
+            yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
             yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
             # Store data for market
@@ -753,14 +772,14 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
             market_info[market]["year_over_year_change"] = yoy_fmt
 
         elif "volume" in var_name:
-            vol_fmt = "${}".format(human_numbers(float(value)))
+            vol_fmt = "${}".format(util.human_numbers(float(value)))
             market_info[market]["value_originations"] = vol_fmt
             # Volume month is the same as origination month
 
         elif "inquiry" in var_name:
             yoy = float(value_yoy)
             yoy_num = "{:.1f}".format(abs(yoy))
-            yoy_desc = PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
+            yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
             yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
             market_info[market]["inquiry_yoy_change"] = yoy_fmt
@@ -769,7 +788,7 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
         elif "denial" in var_name:
             yoy = float(value_yoy)
             yoy_num = "{:.1f}".format(abs(yoy))
-            yoy_desc = PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
+            yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
             yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
             market_info[market]["denial_yoy_change"] = yoy_fmt
@@ -782,9 +801,6 @@ def process_data_snapshot(filepath, date_schema=SNAPSHOT_DATE_SCHEMA):
                 )
             logger.error(msg)
             raise ValueError(msg)
-
-    from pprint import pformat
-    logger.debug("Data Snapshot market info:\n{}".format(pformat(market_info)))
 
     return market_info.values()
 
@@ -818,9 +834,9 @@ if __name__ == '__main__':
         metavar="INPUTDIR",
         type=str,
         dest='inputdir',
-        default=DEFAULT_INPUT_FOLDER,
+        default=cfg.DEFAULT_INPUT_FOLDER,
         help='Specifies directory path for folder containing input data ' +
-             'files (default: "~/Github/consumer-credit-trends-data/data)'
+             'files (default: "{}")'.format(cfg.DEFAULT_INPUT_FOLDER)
     )
     parser.add_argument(
         '-o',
@@ -828,9 +844,9 @@ if __name__ == '__main__':
         metavar="OUTPUTDIR",
         type=str,
         dest='outputdir',
-        default=DEFAULT_OUTPUT_FOLDER,
+        default=cfg.DEFAULT_OUTPUT_FOLDER,
         help='Specifies directory path for root folder to put processed ' +
-             'data (default: "{}")'.format(DEFAULT_OUTPUT_FOLDER)
+             'data (default: "{}")'.format(cfg.DEFAULT_OUTPUT_FOLDER)
     )
     parser.add_argument(
         '-d',

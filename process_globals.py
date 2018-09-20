@@ -19,31 +19,11 @@ DEFAULT_OUTPUT_FOLDER = "~/Github/consumer-credit-trends-data/processed_data/"
 SNAPSHOT_FNAME_KEY = "data_snapshot"
 INQUIRY_INDEX_FNAME_KEY = "main_inquiry_series"
 
-# Market+.csv filename suffix length
-MKT_SFX_LEN = -8
-
 # Text descriptors for data snapshots
 PERCENT_CHANGE_DESCRIPTORS = ["decrease", "increase"]
-MKT_DESCRIPTORS = {
-    "AUT": ["Auto loans", "Dollar volume of new loans"],
-    "CRC": ["Credit cards", "Aggregate credit limits of new cards"],
-    "HCE": ["HECE loans", "Dollar volume of new loans"],
-    "HLC": ["HELOCs", "Dollar volume of new HELOCs"],
-    "MTG": ["Mortgages", "Dollar volume of new mortgages"],
-    "PER": ["Personal loans", "Dollar volume of new loans"],
-    "RET": ["Retail loans", "Dollar volume of new loans"],
-    "STU": ["Student loans", "Dollar volume of new loans"],
-}
-MKT_VAR_KEYWORDS = [
-    "originations",
-    "volume",
-    "inquiry",
-    "denial",
-]
 
 # Data base year
 BASE_YEAR = 2000
-SEC_TO_MS = 1000
 DATA_FILE_DATE_SCHEMA = "%Y-%m"
 SNAPSHOT_DATE_SCHEMA = "%Y-%m-%d"
 
