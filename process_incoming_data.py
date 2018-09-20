@@ -59,7 +59,8 @@ def find_market(input, possible_names=cfg.MARKET_NAMES):
 
 def actual_date(month, schema=cfg.DATA_FILE_DATE_SCHEMA):
     """
-    Takes a month number and computes a date from it.
+    Takes a month number from Office of Research files and computes
+    a date from it.
     January 2000 = month zero
     """
     addl_years = int(month/12)
@@ -279,11 +280,8 @@ def process_file_summary(filename, output_schema):
     # Load specified file as input data
     inputdata = util.load_csv(filename)
 
-    # Initialize output data with column headers
-    data = []
-    proc = {}
-
     # Process data
+    proc = {}
     for row in inputdata:
         monthstr, value, is_adj_str = row
         monthnum = int(monthstr)
@@ -304,6 +302,7 @@ def process_file_summary(filename, output_schema):
 
     # Turn dictionaries into a data list for output
     # This order MUST match the provided schema order
+    data = []
     for monthnum, value in proc.items():
         data.append([monthnum,
                      actual_date(monthnum),
@@ -419,10 +418,10 @@ def process_group_file(filename, output_schema):
 
 # Process year-over-year files with groups
 # (i.e. borrower age, income level, credit score)
-# Output columns: "month", "date", "yoy_<type>", "yoy_<type>",..., "yoy_<type>"
+# Output columns: "month", "date", "yoy_<type>", ... , "yoy_<type>"
 
 def process_group_age_yoy(filename):
-    """alls process_group_yoy_groups with correct group and output schema"""
+    """Calls process_group_yoy_groups with correct group and output schema"""
     postfix = "{}_yoy"
     output_schema = list(cfg.GROUP_YOY_OUTPUT_SCHEMA)
     output_schema += [postfix.format(gname) for gname in cfg.AGE_YOY_COLS]
