@@ -252,12 +252,12 @@ def process_inquiry_index(filename):
     return process_file_summary(filename, cfg.INQUIRY_INDEX_OUTPUT_SCHEMA)
 
 
-# Process inferred denial index file
-def process_denial_index(filename):
-    """Processes specified inferred denial file and
+# Process inferred credit tightness index file
+def process_tightness_index(filename):
+    """Processes specified credit tightness file and
     returns output data and json per the output_schema"""
-    logger.debug("Running process_denial_index")
-    return process_file_summary(filename, cfg.DENIAL_INDEX_OUTPUT_SCHEMA)
+    logger.debug("Running process_tightness_index")
+    return process_file_summary(filename, cfg.TIGHTNESS_INDEX_OUTPUT_SCHEMA)
 
 
 # Process summary files with loan numbers or volumes
@@ -563,10 +563,10 @@ def process_yoy_summary(filename, output_schema=cfg.YOY_SUMMARY_OUTPUT_SCHEMA):
         elif "volume" in type_str.lower():
             proc[monthnum]["vol"] = value
         elif "inquiry" in type_str.lower():
-            # Ignore 'Inquiry Rate' entries in current output
+            # Ignore 'Inquiry Index' entries in current output
             pass
-        elif "denial" in type_str.lower():
-            # Ignore 'Denial Rate' entries in current output
+        elif "tightness" in type_str.lower():
+            # Ignore 'Credit Tightness Index' entries in current output
             pass
         else:
             msg = "YOY Summary Data row (below) improperly " + \
@@ -784,7 +784,7 @@ def process_data_snapshot(filepath, date_schema=cfg.SNAPSHOT_DATE_SCHEMA):
             market_info[market]["inquiry_yoy_change"] = yoy_fmt
             market_info[market]["inquiry_month"] = month
 
-        elif "denial" in var_name:
+        elif "tightness" in var_name:
             yoy = float(value_yoy)
             yoy_num = "{:.1f}".format(abs(yoy))
             yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
@@ -818,7 +818,7 @@ FILE_PREFIXES = {"map_data":                 process_map,
                  "yoy_data_income_level":    process_group_income_yoy,
                  "yoy_data_score_level":     process_group_score_yoy,
                  "inq_data":                 process_inquiry_index,
-                 "den_data":                 process_denial_index,
+                 "crt_data":                 process_tightness_index,
                  }
 
 

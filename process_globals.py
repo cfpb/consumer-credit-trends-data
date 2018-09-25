@@ -34,11 +34,11 @@ INQUIRY_INDEX_OUTPUT_SCHEMA = [
     "inquiry_rate",
     "unadjusted_inquiry_rate"
 ]
-DENIAL_INDEX_OUTPUT_SCHEMA = [
+TIGHTNESS_INDEX_OUTPUT_SCHEMA = [
     "month",
     "date",
-    "inferred_denial_rate",
-    "unadjusted_inferred_denial_rate"
+    "credit tightness_rate",
+    "unadjusted_credit_tightness_rate"
 ]
 
 # Input/output schemas
