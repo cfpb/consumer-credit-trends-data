@@ -563,10 +563,10 @@ def process_yoy_summary(filename, output_schema=cfg.YOY_SUMMARY_OUTPUT_SCHEMA):
         elif "volume" in type_str.lower():
             proc[monthnum]["vol"] = value
         elif "inquiry" in type_str.lower():
-            # Ignore 'Inquiry Rate' entries in current output
+            # Ignore 'Inquiry' entries in current output
             pass
-        elif "denial" in type_str.lower():
-            # Ignore 'Denial Rate' entries in current output
+        elif "tightness" in type_str.lower():
+            # Ignore 'Credit Tightness' entries in current output
             pass
         else:
             msg = "YOY Summary Data row (below) improperly " + \
@@ -784,7 +784,7 @@ def process_data_snapshot(filepath, date_schema=cfg.SNAPSHOT_DATE_SCHEMA):
             market_info[market]["inquiry_yoy_change"] = yoy_fmt
             market_info[market]["inquiry_month"] = month
 
-        elif "denial" in var_name:
+        elif "tightness" in var_name:
             yoy = float(value_yoy)
             yoy_num = "{:.1f}".format(abs(yoy))
             yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
@@ -818,7 +818,7 @@ FILE_PREFIXES = {"map_data":                 process_map,
                  "yoy_data_income_level":    process_group_income_yoy,
                  "yoy_data_score_level":     process_group_score_yoy,
                  "inq_data":                 process_inquiry_index,
-                 "den_data":                 process_denial_index,
+                 "crt_data":                 process_denial_index,
                  }
 
 
