@@ -17,7 +17,6 @@ DEFAULT_OUTPUT_FOLDER = "~/Github/consumer-credit-trends-data/processed_data/"
 # Filenames for non-market-specific files:
 # Data snapshot, inquiry index
 SNAPSHOT_FNAME_KEY = "data_snapshot"
-INQUIRY_INDEX_FNAME_KEY = "main_inquiry_series"
 
 # Text descriptors for data snapshots
 PERCENT_CHANGE_DESCRIPTORS = ["decrease", "increase"]
@@ -31,14 +30,14 @@ SNAPSHOT_DATE_SCHEMA = "%Y-%m-%d"
 INQUIRY_INDEX_OUTPUT_SCHEMA = [
     "month",
     "date",
-    "inquiry_rate",
-    "unadjusted_inquiry_rate"
+    "inquiry_index",
+    "unadjusted_inquiry_index"
 ]
 TIGHTNESS_INDEX_OUTPUT_SCHEMA = [
     "month",
     "date",
-    "credit tightness_rate",
-    "unadjusted_credit_tightness_rate"
+    "tightness_index",
+    "unadjusted_credit_tightness_index"
 ]
 
 # Input/output schemas

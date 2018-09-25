@@ -144,33 +144,6 @@ def process_data_files(inputpath,
 
                 successes.append(filename)
 
-            # Look for inquiry index summary files
-            elif cfg.INQUIRY_INDEX_FNAME_KEY in filename:
-                logger.debug(
-                    "Processing inquiry index file '{}'".format(filename)
-                )
-                cond, databymkt, jsonbymkt = process_inquiry_index(filepath)
-
-                if cond:
-                    for mkt in databymkt:
-                        # Determine output directory
-                        outpath = os.path.join(
-                            outputpath,
-                            cfg.MARKET_NAMES[mkt],
-                            "inquiry_rate_{}.csv".format(mkt)
-                        )
-
-                        if len(databymkt[mkt]) > 0:
-                            util.save_csv(outpath, databymkt[mkt])
-                            util.save_json(
-                                outpath.replace(".csv", ".json"),
-                                jsonbymkt[mkt]
-                            )
-
-                    successes.append(filename)
-                else:
-                    failures.append(filename)
-
             # Doesn't match an expected filename; may not be a CCT file
             else:
                 logger.info(
@@ -790,8 +763,8 @@ def process_data_snapshot(filepath, date_schema=cfg.SNAPSHOT_DATE_SCHEMA):
             yoy_desc = cfg.PERCENT_CHANGE_DESCRIPTORS[yoy > 0]
             yoy_fmt = "{}% {}".format(yoy_num, yoy_desc)
 
-            market_info[market]["denial_yoy_change"] = yoy_fmt
-            market_info[market]["denial_month"] = month
+            market_info[market]["tightness_yoy_change"] = yoy_fmt
+            market_info[market]["tightness_month"] = month
 
         else:
             msg = "Data snapshot row (below) contains unknown " + \
