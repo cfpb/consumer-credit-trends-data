@@ -1,20 +1,52 @@
-# consumer-credit-trends-data
+# Consumer Credit Trends
 
-![Screenshot of consumer-credit-trends](image.png)
 
 ## Explore recent developments in consumer credit markets
-This data appears on http://www.consumerfinance.gov/data-research/consumer-credit-trends/ powering graphs for each featured credit market.
+The data files in this repo appear on [the live Consumer Credit Trends site here](https://www.consumerfinance.gov/data-research/consumer-credit-trends/) powering graphs for each featured credit market, as shown in this screenshot.
 
-## We want your feedback, but will not be able to respond to everyone
-We want as much feedback as possible to help us make informed decisions so that we can make this tool better. Unfortunately, we will not be able to respond to every piece of feedback or comment we receive, but intend to respond with our progress through the evolution of the tool.
+![Screenshot of consumer-credit-trends](cct-screenshot.png)
 
-## Contents
+This site displays graphs for several consumer credit markets:
 
-1. Folders per released market containing CSV and JSON files, using a schema described below.
-  1. JSON files are rendered on our live site using https://github.com/cfpb/cfpb-chart-builder, an extension of Highcharts.
-1. `process_incoming_data.py` transforms internal Office of Research summary CSVs into a more user-readable format.
+- Auto loans
+- Credit cards
+- Mortgages
+- Student loans
+
+For each market, credit information includes:
+
+- Market summaries for volume, value, and geographic changes
+- Lending levels by certain demographic breakdowns
+    - Borrower risk profile (credit score)
+    - Neighborhood income level
+    - Borrower age
+- Inquiry activity
+    - Credit inquiries
+    - Credit tightness
+
+## What's in this repository
+
+### Data files
+
+Data is organized into per-market folders. Provided data files include:
+
+- CSV files of the data for download
+- JSON files which are rendered on [the live site](https://www.consumerfinance.gov/data-research/consumer-credit-trends/) using [cfpb-chart-builder](https://github.com/cfpb/cfpb-chart-builder)
+
+### Python files
+
+The Python 2 based script processes raw data from our Office of Research into the output data files contained in this repo. These raw data files are internal-only and are anonymized summaries produced by the Consumer Credit Panel.
+
+- `process_incoming_data.py` - Overall processing script
+- `process_globals.py` - Configuration settings for data processing
+- `process_utils.py` - Reusable utility functions, e.g. number/date conversions and reading/writing data/csv/json files
 
 ## Data schema
+
+### Markets by folder or filename suffix
+
+Data is organized into per-market folders.
+The suffix of each file indicates the credit market.
 
 <table id="suffix">
   <tbody>
@@ -46,7 +78,10 @@ We want as much feedback as possible to help us make informed decisions so that 
   </tbody>
 </table>
 
-Filenames contain prefixes that represent the type of aggregate data, and suffixes that represent the type of market the data describes.
+### Types of data by filename prefix
+
+The prefix of each file indicates type of aggregate data.
+This table lists these prefixes alphabetically.
 
 <table id="prefix">
   <tbody>
@@ -55,44 +90,63 @@ Filenames contain prefixes that represent the type of aggregate data, and suffix
       <th>Description</th>
     </tr>
     <tr>
-      <td>map_data</td>
-      <td>Geographic map data containing year-over-year changes for each U.S. state</td>
+      <td>crt_</td>
+      <td>Number of consumers who applied for credit each month 
+      and did not obtain additional credit <br/>
+      Values are indexed to January 2009</td>
     </tr>
     <tr>
-      <td>num_data</td>
+      <td>inq_</td>
+      <td>Number of consumers with credit inquiries <br/>
+      Values are indexed to January 2009</td>
+    </tr>
+    <tr>
+      <td>map_data_</td>
+      <td>Geographic map data containing year-over-year changes 
+      for each U.S. state</td>
+    </tr>
+    <tr>
+      <td>num_data_</td>
       <td>Number of new loan originations</td>
     </tr>
     <tr>
-      <td>vol_data</td>
+      <td>vol_data_</td>
       <td>Loan volume in dollars</td>
     </tr>
     <tr>
-      <td>volume_data_Age_Group</td>
-      <td>Loan volume in dollars by age group</td>
+      <td>volume_data_Age_Group_</td>
+      <td>Loan volume in dollars,
+      broken out by the borrower's age group demographics</td>
     </tr>
     <tr>
-      <td>volume_data_yoy_data_Income_Level</td>
-      <td>Loan volume in dollars by income level</td>
+      <td>volume_data_yoy_data_Income_Level_</td>
+      <td>Loan volume in dollars, 
+      broken out  by the borrower's income level relative to their 
+      neighborhood's income level</td>
     </tr>
     <tr>
-      <td>volume_data_Score_Level</td>
-      <td>Loan volume in dollars by credit score group</td>
+      <td>volume_data_Score_Level_</td>
+      <td>Loan volume in dollars, 
+      broken out by the borrower's credit score group</td>
     </tr>
     <tr>
-      <td>yoy_data_all</td>
+      <td>yoy_data_all_</td>
       <td>Year-over-year percentage change in new loan originations</td>
     </tr>
     <tr>
-      <td>yoy_data_Age_Group</td>
-      <td>Year-over-year percentage change in new loan originations by age group</td>
+      <td>yoy_data_Age_Group_</td>
+      <td>Year-over-year percentage change in new loan originations, broken out by the borrower's age group demographics</td>
     </tr>
     <tr>
-      <td>yoy_data_Income_Level</td>
-      <td>Year-over-year percentage change in new loan originations by income level group</td>
+      <td>yoy_data_Income_Level_</td>
+      <td>Year-over-year percentage change in new loan originations,
+      broken out by the borrower's income level relative to their
+      neighborhood's income level</td>
     </tr>
     <tr>
-      <td>yoy_data_Score_Level</td>
-      <td>Year-over-year percentage change in new loan originations by credit score group</td>
+      <td>yoy_data_Score_Level_</td>
+      <td>Year-over-year percentage change in new loan originations,
+      broken out by the borrower's credit score group</td>
     </tr>
   </tbody>
 </table>
