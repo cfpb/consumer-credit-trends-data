@@ -157,7 +157,7 @@ def process_data_files(inputpath,
             try:
                 current_prefix = filename[:MKT_SFX_LEN].lower()
                 cond, data, json = FILE_PREFIXES[current_prefix](filepath)
-            except ValueError, e:
+            except ValueError as e:
                 logger.error("Error occurred during {}".format(filename))
                 raise e
 
