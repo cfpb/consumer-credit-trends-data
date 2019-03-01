@@ -88,7 +88,7 @@ def process_data_files(inputpath,
     )
 
     if len(inputfiles) == 0:
-        logger.warn("No csv data files found in {}".format(inputpath))
+        logger.warning("No csv data files found in {}".format(inputpath))
         return []
 
     successes = []
@@ -103,10 +103,10 @@ def process_data_files(inputpath,
         if market is None:
             if data_snapshot_fname in filename:
                 if len(data_snapshot_path) <= 0:
-                    logger.warn(
+                    logger.warning(
                         "Data snapshot output path is not specified."
                     )
-                    logger.warn(
+                    logger.warning(
                         "To process data snapshot file, specify " +
                         "the --data-snapshot-path command-line " +
                         "argument."
@@ -181,7 +181,7 @@ def process_data_files(inputpath,
     )
 
     if len(failures) > 0:
-        logger.warn(
+        logger.warning(
             "** Unable to process {} input data files".format(
                 len(failures)
             )
@@ -589,7 +589,7 @@ def json_for_bar_chart(data):
             )
             continue
         except TypeError as e:
-            logger.warn(
+            logger.warning(
                 "Missing value as '{}' in row\n'{}'".format(
                     row[2+colnum],
                     repr(row)
@@ -624,7 +624,7 @@ def json_for_group_bar_chart(data, val_cols, out_names):
                 )
                 continue
             except TypeError as e:
-                logger.warn(
+                logger.warning(
                     "Missing value as '{}' in row\n'{}'".format(
                         row[2+colnum],
                         repr(row)
@@ -663,7 +663,7 @@ def json_for_line_chart(data):
             )
             continue
         except TypeError as e:
-            logger.warn(
+            logger.warning(
                 "Missing value as '{}' in row\n'{}'".format(
                     row[2+colnum],
                     repr(row)
@@ -707,7 +707,7 @@ def json_for_group_line_chart(data):
             )
             continue
         except TypeError as e:
-            logger.warn(
+            logger.warning(
                 "Missing value as '{}' in row\n'{}'".format(
                     row[2+colnum],
                     repr(row)
