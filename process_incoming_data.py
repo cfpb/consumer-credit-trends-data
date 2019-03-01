@@ -814,7 +814,7 @@ def process_data_snapshot(filepath, date_schema=cfg.SNAPSHOT_DATE_SCHEMA):
             logger.error(msg)
             raise ValueError(msg)
 
-    return market_info.values()
+    return list(market_info.values())
 
 
 # Filenames are formatted as:

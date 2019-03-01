@@ -62,10 +62,13 @@ def save_json(filename, json_content, writemode='w'):
 
     # Write output as a json file
     with open(filename, writemode) as fp:
-        fp.write(json.dumps(json_content,
-                            sort_keys=True,
-                            indent=4,
-                            separators=(',', ': ')))
+        json.dump(
+            json_content,
+            fp,
+            sort_keys=True,
+            indent=4,
+            separators=(',', ': ')
+        )
 
     logger.debug("Wrote file '{}'".format(filename))
 
