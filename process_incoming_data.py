@@ -251,7 +251,11 @@ def process_file_summary(filename, output_schema):
     """Processes specified summary file and outputs data per the schema"""
 
     # Load specified file as input data
-    inputdata = util.load_csv(filename)
+    try:
+        inputdata = util.load_csv(filename)
+    except Exception as e:
+        logger.error("Make sure you are running Python 2.x!".format(filename))
+        raise e
 
     # Process data
     proc = {}
@@ -584,6 +588,15 @@ def json_for_bar_chart(data):
                 "Ignore ValueError: Discard 'NA' and other non-float values"
             )
             continue
+        except TypeError as e:
+            logger.warn(
+                "Missing value as '{}' in row\n'{}'".format(
+                    row[2+colnum],
+                    repr(row)
+                )
+            )
+            # TODO: Raise error with data so filename can be determined
+            continue
 
     return {"Number of Loans": outnum, "Dollar Volume": outvol}
 
@@ -609,6 +622,15 @@ def json_for_group_bar_chart(data, val_cols, out_names):
                     "Ignore ValueError: Discard 'NA' and other " +
                     "non-float values"
                 )
+                continue
+            except TypeError as e:
+                logger.warn(
+                    "Missing value as '{}' in row\n'{}'".format(
+                        row[2+colnum],
+                        repr(row)
+                    )
+                )
+                # TODO: Raise error with data so filename can be determined
                 continue
 
     out = {}
@@ -639,6 +661,15 @@ def json_for_line_chart(data):
             logger.debug(
                 "Ignore ValueError: Discard 'NA' and other non-float values"
             )
+            continue
+        except TypeError as e:
+            logger.warn(
+                "Missing value as '{}' in row\n'{}'".format(
+                    row[2+colnum],
+                    repr(row)
+                )
+            )
+            # TODO: Raise error with data so filename can be determined
             continue
 
     return out
@@ -674,6 +705,15 @@ def json_for_group_line_chart(data):
             logger.debug(
                 "Ignore ValueError: Discard 'NA' and other non-float values"
             )
+            continue
+        except TypeError as e:
+            logger.warn(
+                "Missing value as '{}' in row\n'{}'".format(
+                    row[2+colnum],
+                    repr(row)
+                )
+            )
+            # TODO: Raise error with data so filename can be determined
             continue
 
     return out
