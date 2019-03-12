@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 
 # Utility Methods
 
-def save_csv(filename, content, writemode='wb'):
+def save_csv(filename, content, writemode='w'):
     """Saves the specified content object into a csv file."""
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
@@ -52,7 +52,7 @@ def save_csv(filename, content, writemode='wb'):
     logger.debug("Wrote file '{}'".format(filename))
 
 
-def save_json(filename, json_content, writemode='wb'):
+def save_json(filename, json_content, writemode='w'):
     """Dumps the specified JSON content into a .json file"""
     if not os.path.exists(os.path.dirname(filename)):
         os.makedirs(os.path.dirname(filename))
@@ -62,17 +62,20 @@ def save_json(filename, json_content, writemode='wb'):
 
     # Write output as a json file
     with open(filename, writemode) as fp:
-        fp.write(json.dumps(json_content,
-                            sort_keys=True,
-                            indent=4,
-                            separators=(',', ': ')))
+        json.dump(
+            json_content,
+            fp,
+            sort_keys=True,
+            indent=4,
+            separators=(',', ': ')
+        )
 
     logger.debug("Wrote file '{}'".format(filename))
 
 
-def load_csv(filename, skipheaderrow=True):
+def load_csv(filename, readmode='r', skipheaderrow=True):
     """Loads CSV data from a file"""
-    with open(filename, 'rb') as csvfile:
+    with open(filename, readmode) as csvfile:
         reader = csv.reader(csvfile)
         data = list(reader)
 
