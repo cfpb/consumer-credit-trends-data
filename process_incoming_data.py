@@ -590,9 +590,9 @@ def json_for_bar_chart(data):
             continue
         except TypeError as e:
             logger.warning(
-                "Missing value as '{}' in row\n'{}'".format(
-                    row[2+colnum],
-                    repr(row)
+                "Missing value as '{}' in data\n'{}'".format(
+                    yoy_num,
+                    repr(data)
                 )
             )
             # TODO: Raise error with data so filename can be determined
