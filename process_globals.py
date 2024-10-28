@@ -56,7 +56,7 @@ SCORE = "credit_score"
 GROUP_YOY_OUTPUT_SCHEMA = ["month", "date"]
 # YOY groups
 # CFPB design standards: sentence case and no spaces around dashes
-AGE_YOY_IN = ["Younger than 30", "30 - 44", "45 - 64", "65 and older"]
+AGE_YOY_IN = ["Younger than 30", "30-44", "45-64", "65 and older"]
 AGE_YOY_COLS = ["younger-than-30", "30-44", "45-64", "65-and-older"]
 AGE_YOY_JSON = ["Younger than 30", "30-44", "45-64", "65 and older"]
 INCOME_YOY_IN = ["Low", "Moderate", "Middle", "High"]
@@ -85,8 +85,8 @@ SCORE_YOY_JSON = [
 ]
 
 # Fixes input text to follow agency guidelines and design manual
-TEXT_FIXES = {"30 - 44": "Age 30-44",
-              "45 - 64": "Age 45-64",
+TEXT_FIXES = {"30-44": "Age 30-44",
+              "45-64": "Age 45-64",
               "65 and older": "Age 65 and older",
               "Deep Subprime": "Deep subprime",
               "Near Prime": "Near-prime",
