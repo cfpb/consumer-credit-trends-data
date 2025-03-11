@@ -1,45 +1,45 @@
 {
-    "date_published": "2025-03-04",
+    "date_published": "2025-03-11",
     "markets": [
         {
-            "data_month": "2024-07-01",
-            "inquiry_month": "2024-11-01",
-            "inquiry_yoy_change": "15.3% decrease",
+            "data_month": "2024-08-01",
+            "inquiry_month": "2024-12-01",
+            "inquiry_yoy_change": "12.2% decrease",
             "market_key": "CRC",
             "num_originations": "7.0 million",
-            "tightness_month": "2024-09-01",
-            "tightness_yoy_change": "4.7% decrease",
-            "value_originations": "$42.8 billion",
-            "year_over_year_change": "7.2% decrease"
+            "tightness_month": "2024-10-01",
+            "tightness_yoy_change": "10.1% decrease",
+            "value_originations": "$41.2 billion",
+            "year_over_year_change": "4.5% decrease"
         },
         {
-            "data_month": "2024-07-01",
+            "data_month": "2024-08-01",
             "market_key": "STU",
-            "num_originations": "732,493",
-            "value_originations": "$11.5 billion",
-            "year_over_year_change": "2.9% decrease"
+            "num_originations": "3.7 million",
+            "value_originations": "$30.3 billion",
+            "year_over_year_change": "7.3% decrease"
         },
         {
-            "data_month": "2024-07-01",
-            "inquiry_month": "2024-11-01",
-            "inquiry_yoy_change": "7.2% increase",
+            "data_month": "2024-08-01",
+            "inquiry_month": "2024-12-01",
+            "inquiry_yoy_change": "3.5% increase",
             "market_key": "AUT",
-            "num_originations": "2.2 million",
+            "num_originations": "2.3 million",
+            "tightness_month": "2024-10-01",
+            "tightness_yoy_change": "3.7% decrease",
+            "value_originations": "$66.7 billion",
+            "year_over_year_change": "2.5% increase"
+        },
+        {
+            "data_month": "2024-08-01",
+            "inquiry_month": "2024-12-01",
+            "inquiry_yoy_change": "3.9% decrease",
+            "market_key": "MTG",
+            "num_originations": "428,211",
             "tightness_month": "2024-09-01",
             "tightness_yoy_change": "1.4% decrease",
-            "value_originations": "$65.2 billion",
-            "year_over_year_change": "5.8% increase"
-        },
-        {
-            "data_month": "2024-07-01",
-            "inquiry_month": "2024-11-01",
-            "inquiry_yoy_change": "6.0% decrease",
-            "market_key": "MTG",
-            "num_originations": "424,224",
-            "tightness_month": "2024-08-01",
-            "tightness_yoy_change": "1.6% increase",
-            "value_originations": "$151.6 billion",
-            "year_over_year_change": "11.0% increase"
+            "value_originations": "$151.2 billion",
+            "year_over_year_change": "1.9% increase"
         }
     ]
 }
