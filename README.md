@@ -35,7 +35,7 @@ Data is organized into per-market folders. Provided data files include:
 
 ### Python files
 
-The Python 2 based script processes raw data from our Office of Research into the output data files contained in this repo. These raw data files are internal-only and are anonymized summaries produced by the Consumer Credit Panel.
+The Python based script processes raw data from our Office of Research into the output data files contained in this repo. These raw data files are internal-only and are anonymized summaries produced by the Consumer Credit Panel.
 
 - `process_incoming_data.py` - Overall processing script
 - `process_globals.py` - Configuration settings for data processing
@@ -91,7 +91,7 @@ This table lists these prefixes alphabetically.
     </tr>
     <tr>
       <td>crt_</td>
-      <td>Number of consumers who applied for credit each month 
+      <td>Number of consumers who applied for credit each month
       and did not obtain additional credit <br/>
       Values are indexed to January 2009</td>
     </tr>
@@ -102,7 +102,7 @@ This table lists these prefixes alphabetically.
     </tr>
     <tr>
       <td>map_data_</td>
-      <td>Geographic map data containing year-over-year changes 
+      <td>Geographic map data containing year-over-year changes
       for each U.S. state</td>
     </tr>
     <tr>
@@ -120,13 +120,13 @@ This table lists these prefixes alphabetically.
     </tr>
     <tr>
       <td>volume_data_yoy_data_Income_Level_</td>
-      <td>Loan volume in dollars, 
-      broken out  by the borrower's income level relative to their 
+      <td>Loan volume in dollars,
+      broken out  by the borrower's income level relative to their
       neighborhood's income level</td>
     </tr>
     <tr>
       <td>volume_data_Score_Level_</td>
-      <td>Loan volume in dollars, 
+      <td>Loan volume in dollars,
       broken out by the borrower's credit score group</td>
     </tr>
     <tr>
