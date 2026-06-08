@@ -1,206 +1,206 @@
 [
     {
         "name": "AL",
-        "value": "4.50"
+        "value": "9.24"
     },
     {
         "name": "AK",
-        "value": "-2.36"
+        "value": "8.28"
     },
     {
         "name": "AZ",
-        "value": "4.98"
+        "value": "8.75"
     },
     {
         "name": "AR",
-        "value": "3.62"
+        "value": "11.13"
     },
     {
         "name": "CA",
-        "value": "3.88"
+        "value": "11.84"
     },
     {
         "name": "CO",
-        "value": "3.77"
+        "value": "5.87"
     },
     {
         "name": "CT",
-        "value": "-12.12"
+        "value": "0.56"
     },
     {
         "name": "DE",
-        "value": "3.73"
+        "value": "17.34"
     },
     {
         "name": "DC",
-        "value": "-9.30"
+        "value": "8.52"
     },
     {
         "name": "FL",
-        "value": "10.80"
+        "value": "20.08"
     },
     {
         "name": "GA",
-        "value": "5.82"
+        "value": "8.08"
     },
     {
         "name": "HI",
-        "value": "9.38"
+        "value": "15.77"
     },
     {
         "name": "ID",
-        "value": "6.03"
+        "value": "-0.38"
     },
     {
         "name": "IL",
-        "value": "3.92"
+        "value": "3.18"
     },
     {
         "name": "IN",
-        "value": "12.11"
+        "value": "0.04"
     },
     {
         "name": "IA",
-        "value": "4.41"
+        "value": "8.22"
     },
     {
         "name": "KS",
-        "value": "-3.09"
+        "value": "-2.96"
     },
     {
         "name": "KY",
-        "value": "9.85"
+        "value": "4.56"
     },
     {
         "name": "LA",
-        "value": "6.84"
+        "value": "2.22"
     },
     {
         "name": "ME",
-        "value": "-0.56"
+        "value": "-3.13"
     },
     {
         "name": "MD",
-        "value": "12.98"
+        "value": "0.66"
     },
     {
         "name": "MA",
-        "value": "2.10"
+        "value": "7.58"
     },
     {
         "name": "MI",
-        "value": "4.89"
+        "value": "7.27"
     },
     {
         "name": "MN",
-        "value": "1.61"
+        "value": "2.71"
     },
     {
         "name": "MS",
-        "value": "-7.48"
+        "value": "9.61"
     },
     {
         "name": "MO",
-        "value": "13.03"
+        "value": "9.33"
     },
     {
         "name": "MT",
-        "value": "21.35"
+        "value": "-11.36"
     },
     {
         "name": "NE",
-        "value": "-4.46"
+        "value": "11.29"
     },
     {
         "name": "NV",
-        "value": "8.83"
+        "value": "20.32"
     },
     {
         "name": "NH",
-        "value": "12.22"
+        "value": "19.28"
     },
     {
         "name": "NJ",
-        "value": "3.47"
+        "value": "9.11"
     },
     {
         "name": "NM",
-        "value": "14.93"
+        "value": "11.88"
     },
     {
         "name": "NY",
-        "value": "12.47"
+        "value": "14.19"
     },
     {
         "name": "NC",
-        "value": "3.99"
+        "value": "18.78"
     },
     {
         "name": "ND",
-        "value": "11.14"
+        "value": "26.87"
     },
     {
         "name": "OH",
-        "value": "11.74"
+        "value": "11.17"
     },
     {
         "name": "OK",
-        "value": "2.27"
+        "value": "2.59"
     },
     {
         "name": "OR",
-        "value": "12.41"
+        "value": "15.25"
     },
     {
         "name": "PA",
-        "value": "8.62"
+        "value": "12.94"
     },
     {
         "name": "RI",
-        "value": "1.97"
+        "value": "15.25"
     },
     {
         "name": "SC",
-        "value": "-2.13"
+        "value": "14.61"
     },
     {
         "name": "SD",
-        "value": "11.42"
+        "value": "12.61"
     },
     {
         "name": "TN",
-        "value": "5.96"
+        "value": "11.67"
     },
     {
         "name": "TX",
-        "value": "9.35"
+        "value": "15.77"
     },
     {
         "name": "UT",
-        "value": "20.24"
+        "value": "-9.32"
     },
     {
         "name": "VT",
-        "value": "33.84"
+        "value": "13.09"
     },
     {
         "name": "VA",
-        "value": "4.24"
+        "value": "3.70"
     },
     {
         "name": "WA",
-        "value": "-4.39"
+        "value": "13.07"
     },
     {
         "name": "WV",
-        "value": "15.51"
+        "value": "37.13"
     },
     {
         "name": "WI",
-        "value": "-1.29"
+        "value": "5.71"
     },
     {
         "name": "WY",
-        "value": "42.09"
+        "value": "26.03"
     }
 ]
